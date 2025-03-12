@@ -43,7 +43,7 @@ export function prepareLineChartData(data: CommonDataset, config: LineChartConfi
     // Create Chart.js datasets
     const chartJSDatasets = Array.from(dataByCategory.entries()).map(([category, points], index) => {
         const backgroundColor = theme.backgroundColor[index % theme.backgroundColor.length];
-        const borderColor = theme.borderColor[index % theme.borderColor.length];
+        const borderColor = backgroundColor; // Same as background color for consistent look
 
         return {
             label: category,
@@ -51,11 +51,11 @@ export function prepareLineChartData(data: CommonDataset, config: LineChartConfi
             fill: false,
             backgroundColor,
             borderColor,
-            borderWidth: 2,
+            borderWidth: 2, // Keep this for line visibility
             tension: config.tension || 0.4,
             pointRadius: config.showPoints ? 4 : 0,
             pointBackgroundColor: borderColor,
-            pointBorderColor: isDarkMode ? '#333' : '#fff',
+            pointBorderColor: 'transparent', // Transparent point borders
             pointHoverRadius: 6
         };
     });
@@ -114,12 +114,28 @@ export function prepareLineChartOptions(config: LineChartConfig, isDarkMode: boo
                 position: 'top' as const,
                 labels: {
                     color: theme.legendTextColor,
-                }
+                    usePointStyle: true,
+                    pointStyle: 'rectRounded',
+                    pointStyleWidth: 40,
+                    padding: 16,
+                },
+                rtl: false,
+                align: 'start',
+                onHover(e) {
+                    const target = e.native?.target as HTMLElement;
+                    if (target) {
+                        target.style.cursor = 'pointer';
+                    }
+                },
             },
             title: {
                 display: !!config.title,
                 text: config.title || '',
-                color: theme.textColor
+                color: theme.textColor,
+                font: {
+                    size: 18,
+                    weight: 'bold',
+                }
             },
             tooltip: {
                 backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.8)',

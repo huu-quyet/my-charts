@@ -50,16 +50,15 @@ export function prepareBubbleChartData(data: CommonDataset, config: BubbleChartC
     // Create Chart.js datasets
     const chartJSDatasets = Array.from(dataByCategory.entries()).map(([category, points], index) => {
         const backgroundColor = theme.backgroundColor[index % theme.backgroundColor.length];
-        const borderColor = theme.borderColor[index % theme.borderColor.length];
 
         return {
             label: category,
             data: points,
             backgroundColor,
-            borderColor,
-            borderWidth: 1,
-            hoverRadius: 4,
-            hoverBorderWidth: 1,
+            borderColor: backgroundColor, // Same as background color
+            borderWidth: 0, // No borders
+            hoverBackgroundColor: `${backgroundColor}CC`, // Slightly different on hover
+            hoverBorderWidth: 0, // No border on hover
         };
     });
 
@@ -118,12 +117,28 @@ export function prepareBubbleChartOptions(config: BubbleChartConfig, isDarkMode:
                 position: 'top' as const,
                 labels: {
                     color: theme.legendTextColor,
-                }
+                    usePointStyle: true,
+                    pointStyle: 'rectRounded',
+                    pointStyleWidth: 40,
+                    padding: 16,
+                },
+                rtl: false,
+                align: 'start',
+                onHover(e) {
+                    const target = e.native?.target as HTMLElement;
+                    if (target) {
+                        target.style.cursor = 'pointer';
+                    }
+                },
             },
             title: {
                 display: !!config.title,
                 text: config.title || '',
-                color: theme.textColor
+                color: theme.textColor,
+                font: {
+                    size: 18,
+                    weight: 'bold',
+                }
             },
             tooltip: {
                 callbacks: {

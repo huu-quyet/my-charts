@@ -17,16 +17,14 @@ export function preparePolarAreaChartData(data: CommonDataset, isDarkMode: boole
     const values = data.items.map(item => item.value);
     const backgroundColor = data.items.map((item, index) =>
         item.color || theme.backgroundColor[index % theme.backgroundColor.length]);
-    const borderColor = data.items.map((item, index) =>
-        item.color ? adjustColorOpacity(item.color, 1) : theme.borderColor[index % theme.borderColor.length]);
 
     return {
         labels,
         datasets: [{
             data: values,
             backgroundColor,
-            borderColor,
-            borderWidth: 1
+            borderColor: backgroundColor, // Same as background color
+            borderWidth: 0 // No borders
         }]
     };
 }
@@ -62,12 +60,28 @@ export function preparePolarAreaChartOptions(config: PolarAreaChartConfig, isDar
                 position: 'top' as const,
                 labels: {
                     color: theme.legendTextColor,
-                }
+                    usePointStyle: true,
+                    pointStyle: 'rectRounded',
+                    pointStyleWidth: 40,
+                    padding: 16,
+                },
+                rtl: false,
+                align: 'start',
+                onHover(e) {
+                    const target = e.native?.target as HTMLElement;
+                    if (target) {
+                        target.style.cursor = 'pointer';
+                    }
+                },
             },
             title: {
                 display: !!config.title,
                 text: config.title || '',
-                color: theme.textColor
+                color: theme.textColor,
+                font: {
+                    size: 18,
+                    weight: 'bold',
+                }
             },
             tooltip: {
                 backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.8)',
@@ -83,31 +97,4 @@ export function preparePolarAreaChartOptions(config: PolarAreaChartConfig, isDar
         startAngle: config.startAngle || -0.5 * Math.PI,
         ...config.options
     };
-}
-
-/**
- * Helper function to adjust color opacity
- * Works with hex, rgb, and rgba color formats
- * 
- * @param color The base color string
- * @param opacity The opacity value (0-1)
- * @returns Color string with adjusted opacity
- */
-function adjustColorOpacity(color: string, opacity: number): string {
-    // For hex colors
-    if (color.startsWith('#')) {
-        return `${color}${Math.round(opacity * 255).toString(16).padStart(2, '0')}`;
-    }
-
-    // For rgba colors
-    if (color.startsWith('rgba')) {
-        return color.replace(/rgba\((.+?), .+?\)/, `rgba($1, ${opacity})`);
-    }
-
-    // For rgb colors
-    if (color.startsWith('rgb')) {
-        return color.replace(/rgb\((.+?)\)/, `rgba($1, ${opacity})`);
-    }
-
-    return color;
 }

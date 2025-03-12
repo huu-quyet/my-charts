@@ -42,13 +42,12 @@ export function prepareScatterChartData(data: CommonDataset, config: ScatterChar
     // Create Chart.js datasets
     const chartJSDatasets = Array.from(dataByCategory.entries()).map(([category, points], index) => {
         const backgroundColor = theme.backgroundColor[index % theme.backgroundColor.length];
-        const borderColor = theme.borderColor[index % theme.borderColor.length];
 
         return {
             label: category,
             data: points,
             backgroundColor,
-            borderColor,
+            borderColor: 'transparent', // Transparent borders
             pointRadius: config.pointRadius || 5,
             pointHoverRadius: (config.pointRadius || 5) + 2,
         };
@@ -109,12 +108,28 @@ export function prepareScatterChartOptions(config: ScatterChartConfig, isDarkMod
                 position: 'top' as const,
                 labels: {
                     color: theme.legendTextColor,
-                }
+                    usePointStyle: true,
+                    pointStyle: 'rectRounded',
+                    pointStyleWidth: 40,
+                    padding: 16,
+                },
+                rtl: false,
+                align: 'start',
+                onHover(e) {
+                    const target = e.native?.target as HTMLElement;
+                    if (target) {
+                        target.style.cursor = 'pointer';
+                    }
+                },
             },
             title: {
                 display: !!config.title,
                 text: config.title || '',
-                color: theme.textColor
+                color: theme.textColor,
+                font: {
+                    size: 18,
+                    weight: 'bold',
+                }
             },
             tooltip: {
                 callbacks: {

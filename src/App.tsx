@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import './App.css'
 import {
   PieChartComponent,
@@ -9,13 +8,10 @@ import {
   PolarAreaChartComponent,
   ScatterChartComponent,
   ChartMetadata,
-  ChartType,
   CommonDataset,
 } from '@plugins/chartjs'
 
 function App() {
-  const [showDemo, setShowDemo] = useState(false)
-  const [activeChart, setActiveChart] = useState<ChartType | null>(null)
 
   // Sample metadata
   const chartMetadata: ChartMetadata = {
@@ -26,15 +22,15 @@ function App() {
   // Create a common dataset for all charts
   const commonDataset: CommonDataset = {
     items: [
-      { label: "Red", value: 12, color: "#FF6384", category: "Group 1" },
-      { label: "Blue", value: 19, color: "#36A2EB", category: "Group 1" },
-      { label: "Yellow", value: 3, color: "#FFCE56", category: "Group 1" },
-      { label: "Green", value: 5, color: "#4BC0C0", category: "Group 2" },
-      { label: "Purple", value: 2, color: "#9966FF", category: "Group 2" },
-      { label: "Orange", value: 3, color: "#FF9F40", category: "Group 2" },
-      { label: "Red", value: 8, color: "#FF6384", category: "Group 3" },
-      { label: "Blue", value: 12, color: "#36A2EB", category: "Group 3" },
-      { label: "Yellow", value: 8, color: "#FFCE56", category: "Group 3" },
+      { label: "Red", value: 12, category: "Group 1" },
+      { label: "Blue", value: 19, category: "Group 1" },
+      { label: "Yellow", value: 3, category: "Group 1" },
+      { label: "Green", value: 5, category: "Group 2" },
+      { label: "Purple", value: 2, category: "Group 2" },
+      { label: "Orange", value: 3, category: "Group 2" },
+      { label: "Red", value: 8, category: "Group 3" },
+      { label: "Blue", value: 12, category: "Group 3" },
+      { label: "Yellow", value: 8, category: "Group 3" },
     ]
   }
 
@@ -125,180 +121,110 @@ function App() {
   }
 
   return (
-    <>
+    <div className='chart-list'>
       <h1>Viz Platform</h1>
-      <div className="card">
-        <button onClick={() => setShowDemo(!showDemo)}>
-          {showDemo ? 'Hide' : 'Show'} Chart Demos
-        </button>
-        {showDemo && (
-          <>
-            <div className="chart-selection">
-              <button
-                className={activeChart === ChartType.PIE ? 'active' : ''}
-                onClick={() => setActiveChart(ChartType.PIE)}
-              >
-                Pie Chart
-              </button>
-              <button
-                className={activeChart === ChartType.LINE ? 'active' : ''}
-                onClick={() => setActiveChart(ChartType.LINE)}
-              >
-                Line Chart
-              </button>
-              <button
-                className={activeChart === ChartType.BAR ? 'active' : ''}
-                onClick={() => setActiveChart(ChartType.BAR)}
-              >
-                Bar Chart
-              </button>
-              <button
-                className={activeChart === ChartType.RADAR ? 'active' : ''}
-                onClick={() => setActiveChart(ChartType.RADAR)}
-              >
-                Radar Chart
-              </button>
-              <button
-                className={activeChart === ChartType.BUBBLE ? 'active' : ''}
-                onClick={() => setActiveChart(ChartType.BUBBLE)}
-              >
-                Bubble Chart
-              </button>
-              <button
-                className={activeChart === ChartType.POLAR_AREA ? 'active' : ''}
-                onClick={() => setActiveChart(ChartType.POLAR_AREA)}
-              >
-                Polar Area
-              </button>
-              <button
-                className={activeChart === ChartType.SCATTER ? 'active' : ''}
-                onClick={() => setActiveChart(ChartType.SCATTER)}
-              >
-                Scatter
-              </button>
-            </div>
-          </>
-        )}
-      </div>
-
-      {showDemo && (
-        <div className="chart-container">
-          {activeChart === ChartType.PIE && (
-            <div className="chart-demo">
-              <h2>Pie Chart</h2>
-              <PieChartComponent
-                metadata={chartMetadata}
-                data={commonDataset}
-                config={{
-                  title: 'Sample Distribution',
-                  showLegend: true,
-                  cutout: '30%'
-                }}
-              />
-            </div>
-          )}
-
-          {activeChart === ChartType.LINE && (
-            <div className="chart-demo">
-              <h2>Line Chart</h2>
-              <LineChartComponent
-                metadata={chartMetadata}
-                data={timeSeriesDataset}
-                config={{
-                  title: 'Monthly Performance',
-                  xAxisLabel: 'Month',
-                  yAxisLabel: 'Value',
-                  tension: 0.3,
-                  showPoints: true
-                }}
-              />
-            </div>
-          )}
-
-          {activeChart === ChartType.BAR && (
-            <div className="chart-demo">
-              <h2>Bar Chart</h2>
-              <BarChartComponent
-                metadata={chartMetadata}
-                data={yearsDataset}
-                config={{
-                  title: 'Annual Performance',
-                  xAxisLabel: 'Year',
-                  yAxisLabel: 'Value',
-                  borderRadius: 4,
-                  horizontal: false,
-                  stacked: false
-                }}
-              />
-            </div>
-          )}
-
-          {activeChart === ChartType.RADAR && (
-            <div className="chart-demo">
-              <h2>Radar Chart</h2>
-              <RadarChartComponent
-                metadata={chartMetadata}
-                data={radarDataset}
-                config={{
-                  title: 'Activity Comparison',
-                  showLegend: true
-                }}
-              />
-            </div>
-          )}
-
-          {activeChart === ChartType.BUBBLE && (
-            <div className="chart-demo">
-              <h2>Bubble Chart</h2>
-              <BubbleChartComponent
-                metadata={chartMetadata}
-                data={bubbleDataset}
-                config={{
-                  title: 'Size Comparison',
-                  xAxisLabel: 'X Position',
-                  yAxisLabel: 'Y Position',
-                  sizeLabel: 'Bubble Size',
-                  showLegend: true
-                }}
-              />
-            </div>
-          )}
-
-          {activeChart === ChartType.POLAR_AREA && (
-            <div className="chart-demo">
-              <h2>Polar Area Chart</h2>
-              <PolarAreaChartComponent
-                metadata={chartMetadata}
-                data={commonDataset}
-                config={{
-                  title: 'Value Distribution',
-                  showLegend: true,
-                  animateRotate: true,
-                  animateScale: true
-                }}
-              />
-            </div>
-          )}
-
-          {activeChart === ChartType.SCATTER && (
-            <div className="chart-demo">
-              <h2>Scatter Plot</h2>
-              <ScatterChartComponent
-                metadata={chartMetadata}
-                data={scatterDataset}
-                config={{
-                  title: 'Point Distribution',
-                  xAxisLabel: 'X Axis',
-                  yAxisLabel: 'Y Axis',
-                  pointRadius: 6,
-                  showLegend: true
-                }}
-              />
-            </div>
-          )}
+      <div className="chart-container">
+        <div className="chart-demo">
+          <h2>Pie Chart</h2>
+          <PieChartComponent
+            metadata={chartMetadata}
+            data={commonDataset}
+            config={{
+              title: 'Sample Distribution',
+              showLegend: true,
+              cutout: '30%'
+            }}
+          />
         </div>
-      )}
-    </>
+
+        <div className="chart-demo">
+          <h2>Line Chart</h2>
+          <LineChartComponent
+            metadata={chartMetadata}
+            data={timeSeriesDataset}
+            config={{
+              title: 'Monthly Performance',
+              xAxisLabel: 'Month',
+              yAxisLabel: 'Value',
+              tension: 0.3,
+              showPoints: true
+            }}
+          />
+        </div>
+
+        <div className="chart-demo">
+          <h2>Bar Chart</h2>
+          <BarChartComponent
+            metadata={chartMetadata}
+            data={yearsDataset}
+            config={{
+              title: 'Annual Performance',
+              xAxisLabel: 'Year',
+              yAxisLabel: 'Value',
+              borderRadius: 4,
+              horizontal: false,
+              stacked: false
+            }}
+          />
+        </div>
+
+        <div className="chart-demo">
+          <h2>Radar Chart</h2>
+          <RadarChartComponent
+            metadata={chartMetadata}
+            data={radarDataset}
+            config={{
+              title: 'Activity Comparison',
+              showLegend: true
+            }}
+          />
+        </div>
+
+        <div className="chart-demo">
+          <h2>Bubble Chart</h2>
+          <BubbleChartComponent
+            metadata={chartMetadata}
+            data={bubbleDataset}
+            config={{
+              title: 'Size Comparison',
+              xAxisLabel: 'X Position',
+              yAxisLabel: 'Y Position',
+              sizeLabel: 'Bubble Size',
+              showLegend: true
+            }}
+          />
+        </div>
+
+        <div className="chart-demo">
+          <h2>Polar Area Chart</h2>
+          <PolarAreaChartComponent
+            metadata={chartMetadata}
+            data={commonDataset}
+            config={{
+              title: 'Value Distribution',
+              showLegend: true,
+              animateRotate: true,
+              animateScale: true
+            }}
+          />
+        </div>
+
+        <div className="chart-demo">
+          <h2>Scatter Plot</h2>
+          <ScatterChartComponent
+            metadata={chartMetadata}
+            data={scatterDataset}
+            config={{
+              title: 'Point Distribution',
+              xAxisLabel: 'X Axis',
+              yAxisLabel: 'Y Axis',
+              pointRadius: 6,
+              showLegend: true
+            }}
+          />
+        </div>
+      </div>
+    </div>
   )
 }
 

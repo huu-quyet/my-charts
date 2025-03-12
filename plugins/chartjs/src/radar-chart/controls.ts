@@ -38,17 +38,17 @@ export function prepareRadarChartData(data: CommonDataset, isDarkMode: boolean) 
     const sortedLabels = Array.from(labels);
     const chartJSDatasets = Array.from(categories).map((category, index) => {
         const values = valueLookup.get(category) || new Map();
-        const backgroundColor = `${theme.backgroundColor[index % theme.backgroundColor.length]}80`; // Add transparency
-        const borderColor = theme.borderColor[index % theme.borderColor.length];
+        const backgroundColor = theme.backgroundColor[index % theme.backgroundColor.length];
+        const borderColor = backgroundColor; // Same as background color
 
         return {
             label: category,
             data: sortedLabels.map(label => values.get(label) || 0),
             backgroundColor,
             borderColor,
-            borderWidth: 1,
-            pointBackgroundColor: borderColor,
-            pointBorderColor: isDarkMode ? '#333' : '#fff',
+            borderWidth: 0, // No borders
+            pointBackgroundColor: backgroundColor,
+            pointBorderColor: 'transparent', // Transparent point borders
             pointHoverRadius: 6
         };
     });
@@ -96,12 +96,28 @@ export function prepareRadarChartOptions(config: RadarChartConfig, isDarkMode: b
                 position: 'top' as const,
                 labels: {
                     color: theme.legendTextColor,
-                }
+                    usePointStyle: true,
+                    pointStyle: 'rectRounded',
+                    pointStyleWidth: 40,
+                    padding: 16,
+                },
+                rtl: false,
+                align: 'start',
+                onHover(e) {
+                    const target = e.native?.target as HTMLElement;
+                    if (target) {
+                        target.style.cursor = 'pointer';
+                    }
+                },
             },
             title: {
                 display: !!config.title,
                 text: config.title || '',
-                color: theme.textColor
+                color: theme.textColor,
+                font: {
+                    size: 18,
+                    weight: 'bold',
+                }
             },
             tooltip: {
                 backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.8)',

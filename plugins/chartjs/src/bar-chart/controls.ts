@@ -36,14 +36,13 @@ export function prepareBarChartData(data: CommonDataset, config: BarChartConfig,
     // Create Chart.js datasets
     const chartJSDatasets = Array.from(dataByCategory.entries()).map(([category, values], index) => {
         const backgroundColor = theme.backgroundColor[index % theme.backgroundColor.length];
-        const borderColor = theme.borderColor[index % theme.borderColor.length];
 
         return {
             label: category,
             data: sortedLabels.map(label => values.get(label) || 0),
             backgroundColor,
-            borderColor,
-            borderWidth: 1,
+            borderColor: backgroundColor, // Same as background color
+            borderWidth: 0, // No borders
             borderRadius: config.borderRadius || 0,
             barPercentage: 0.8
         };
@@ -106,12 +105,28 @@ export function prepareBarChartOptions(config: BarChartConfig, isDarkMode: boole
                 position: 'top' as const,
                 labels: {
                     color: theme.legendTextColor,
-                }
+                    usePointStyle: true,
+                    pointStyle: 'rectRounded',
+                    pointStyleWidth: 40,
+                    padding: 16,
+                },
+                rtl: false,
+                align: 'start',
+                onHover(e) {
+                    const target = e.native?.target as HTMLElement;
+                    if (target) {
+                        target.style.cursor = 'pointer';
+                    }
+                },
             },
             title: {
                 display: !!config.title,
                 text: config.title || '',
-                color: theme.textColor
+                color: theme.textColor,
+                font: {
+                    size: 18,
+                    weight: 'bold',
+                }
             },
             tooltip: {
                 backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.8)',

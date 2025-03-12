@@ -45,7 +45,7 @@
   margin-top: 0;
   margin-bottom: 0.5rem;
   font-size: 1.2rem;
-  text-align: center;
+  text-align: left;
 }
 
 .chart-description {
@@ -53,7 +53,7 @@
   margin-bottom: 1rem;
   font-size: 0.9rem;
   color: #666;
-  text-align: center;
+  text-align: left;
 }
 
 /* Dark mode styles */

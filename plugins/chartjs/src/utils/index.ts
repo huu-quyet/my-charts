@@ -24,3 +24,30 @@ export function formatNumber(value: number): string {
     }
     return value.toString();
 }
+
+/**
+ * Helper function to adjust color opacity
+ * Works with hex, rgb, and rgba color formats
+ * 
+ * @param color The base color string
+ * @param opacity The opacity value (0-1)
+ * @returns Color string with adjusted opacity
+ */
+export function adjustColorOpacity(color: string, opacity: number): string {
+    // For hex colors
+    if (color.startsWith('#')) {
+        return `${color}${Math.round(opacity * 255).toString(16).padStart(2, '0')}`;
+    }
+
+    // For rgba colors
+    if (color.startsWith('rgba')) {
+        return color.replace(/rgba\((.+?), .+?\)/, `rgba($1, ${opacity})`);
+    }
+
+    // For rgb colors
+    if (color.startsWith('rgb')) {
+        return color.replace(/rgb\((.+?)\)/, `rgba($1, ${opacity})`);
+    }
+
+    return color;
+}
