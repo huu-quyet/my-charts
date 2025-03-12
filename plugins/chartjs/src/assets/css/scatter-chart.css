@@ -1,0 +1,30 @@
+.scatter-chart-container {
+  margin-bottom: 2rem;
+}
+
+.scatter-chart {
+  position: relative;
+  height: 400px;
+  width: 100%;
+}
+
+.chart-title {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.chart-description {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: #666;
+  text-align: center;
+}
+
+@media (prefers-color-scheme: dark) {
+  .chart-description {
+    color: #aaa;
+  }
+}
