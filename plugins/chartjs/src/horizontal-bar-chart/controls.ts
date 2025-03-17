@@ -1,18 +1,18 @@
 import { ChartOptions } from 'chart.js';
-import { CommonDataset, DEFAULT_LIGHT_THEME, DEFAULT_DARK_THEME } from '../types';
-import { BarChartConfig } from './types';
+import { CommonDataset, DEFAULT_DARK_THEME, DEFAULT_LIGHT_THEME } from '../types';
+import { HorizontalBarChartConfig } from './types';
 
 /**
- * Prepare bar chart data for rendering with Chart.js
+ * Prepare horizontal bar chart data for rendering with Chart.js
  * Transforms the common dataset into the format expected by Chart.js
- * Groups data by category for multi-series bar charts
+ * Groups data by category for multi-series horizontal bar charts
  * 
  * @param data The common dataset
- * @param config The bar chart config
+ * @param config The horizontal bar chart config
  * @param isDarkMode Whether the UI is in dark mode
  * @returns Chart.js compatible data object
  */
-export function prepareBarChartData(data: CommonDataset, config: BarChartConfig, isDarkMode: boolean) {
+export function prepareHorizontalBarChartData(data: CommonDataset, config: HorizontalBarChartConfig, isDarkMode: boolean) {
     const theme = isDarkMode ? DEFAULT_DARK_THEME : DEFAULT_LIGHT_THEME;
 
     // Group data by category
@@ -44,7 +44,7 @@ export function prepareBarChartData(data: CommonDataset, config: BarChartConfig,
             borderColor: backgroundColor, // Same as background color
             borderWidth: 0, // No borders
             borderRadius: config.borderRadius || 4,
-            barPercentage: 0.8,
+            barPercentage: 0.8
         };
     });
 
@@ -58,17 +58,17 @@ export function prepareBarChartData(data: CommonDataset, config: BarChartConfig,
  * Prepare chart options based on configuration
  * Sets up the Chart.js options object with proper theme and user config
  * 
- * @param config The bar chart configuration
+ * @param config The horizontal bar chart configuration
  * @param isDarkMode Whether the UI is in dark mode
  * @returns Chart.js options object
  */
-export function prepareBarChartOptions(config: BarChartConfig, isDarkMode: boolean): ChartOptions<'bar'> {
+export function prepareHorizontalBarChartOptions(config: HorizontalBarChartConfig, isDarkMode: boolean): ChartOptions<'bar'> {
     const theme = isDarkMode ? DEFAULT_DARK_THEME : DEFAULT_LIGHT_THEME;
 
     return {
         responsive: true,
         maintainAspectRatio: false,
-        indexAxis: config.horizontal ? 'y' : 'x',
+        indexAxis: 'y',
         scales: {
             x: {
                 stacked: !!config.stacked,

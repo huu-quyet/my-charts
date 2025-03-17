@@ -33,6 +33,27 @@ export interface CommonDataItem {
 }
 
 /**
+ * Filter configuration for dynamically filtering chart data
+ * Enables interactive data exploration within visualizations
+ */
+export interface DataFilter {
+    /** The field name(s) to filter on - can be a single field or multiple fields */
+    field: string;
+    /** The operator to use for filtering (equals, contains, etc.) */
+    operator: 'equals' | 'contains' | 'greaterThan' | 'lessThan';
+    /** The value(s) to compare against */
+    value: string | number;
+    /** Whether this filter is currently active */
+    active: boolean;
+    /** 
+     * Optional logic for combining multiple field conditions
+     * - 'AND': All fields must match (default when multiple fields)
+     * - 'OR': Any field can match
+     */
+    fieldLogic?: 'AND' | 'OR';
+}
+
+/**
  * Standardized dataset format used across all chart types
  * Enables seamless data sharing between different visualization types
  */
@@ -56,6 +77,20 @@ export interface BaseChartProps<TConfig> {
     data: CommonDataset;
     /** Optional configuration options specific to this chart type */
     config?: TConfig;
+}
+
+/**
+ * Props for the dynamic chart component that can switch between chart types
+ * and supports interactive filtering
+ * @template TConfig The configuration type specific to the selected chart type
+ */
+export interface DynamicChartProps<TConfig = unknown> extends BaseChartProps<TConfig> {
+    /** The type of chart to render */
+    chartType: ChartType;
+    /** Configuration options for filtering the data */
+    // filters?: DataFilter[];
+    /** Callback function when filters are changed by the user */
+    // onChangeFiltering?: (filters: DataFilter[]) => void;
 }
 
 /**
@@ -152,7 +187,16 @@ export type ChartComponentProps =
     | import('./pie-chart/types').PieChartProps
     | import('./bar-chart/types').BarChartProps
     | import('./line-chart/types').LineChartProps
-    | import('./radar-chart/types').RadarChartProps;
+    | import('./radar-chart/types').RadarChartProps
+    | import('./bubble-chart/types').BubbleChartProps
+    | import('./polar-area-chart/types').PolarAreaChartProps
+    | import('./scatter-chart/types').ScatterChartProps
+    | import('./doughnut-chart/types').DoughnutChartProps
+    | import('./stack-chart/types').StackChartProps
+    | import('./heatmap-chart/types').HeatmapChartProps
+    | import('./floating-chart/types').FloatingChartProps
+    | import('./horizontal-bar-chart/types').HorizontalBarChartProps;
+
 
 /**
  * Enumeration of all available chart types
@@ -172,7 +216,17 @@ export enum ChartType {
     /** Polar area chart for comparing similar to pie but with area */
     POLAR_AREA = 'polarArea',
     /** Scatter chart for showing correlation between variables */
-    SCATTER = 'scatter'
+    SCATTER = 'scatter',
+    /** Doughnut chart for showing part-to-whole relationships with a center hole */
+    DOUGHNUT = 'doughnut',
+    /** Stack chart for showing part-to-whole relationships over a dimension */
+    STACK = 'stack',
+    /** Heatmap chart for visualizing matrix data and color intensity */
+    HEATMAP = 'heatmap',
+    /** Floating chart for showing floating data points */
+    FLOATING = 'floating',
+    /** Horizontal bar chart for comparing discrete categories horizontally */
+    HORIZONTAL_BAR = 'horizontal-bar'
 }
 
 /**
@@ -187,6 +241,11 @@ export type ChartComponentPropsMap = {
     [ChartType.BUBBLE]: import('./bubble-chart/types').BubbleChartProps;
     [ChartType.POLAR_AREA]: import('./polar-area-chart/types').PolarAreaChartProps;
     [ChartType.SCATTER]: import('./scatter-chart/types').ScatterChartProps;
+    [ChartType.DOUGHNUT]: import('./doughnut-chart/types').DoughnutChartProps;
+    [ChartType.STACK]: import('./stack-chart/types').StackChartProps;
+    [ChartType.HEATMAP]: import('./heatmap-chart/types').HeatmapChartProps;
+    [ChartType.FLOATING]: import('./floating-chart/types').FloatingChartProps;
+    [ChartType.HORIZONTAL_BAR]: import('./horizontal-bar-chart/types').HorizontalBarChartProps;
 };
 
 /**

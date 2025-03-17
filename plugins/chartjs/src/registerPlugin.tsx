@@ -1,11 +1,5 @@
-import type { ChartComponentProps, ChartComponentPropsMap, ChartComponentRegistry, ChartType } from './types';
-
-/**
- * In-memory registry of available chart components
- * This would typically be stored in a more centralized location
- * or managed by a state management library like Redux
- */
-export const chartComponents: ChartComponentRegistry = {};
+import chartComponents from './ChartRegistry';
+import type { ChartComponentProps, ChartComponentPropsMap, ChartType } from './types';
 
 /**
  * Registers a chart component in the global registry

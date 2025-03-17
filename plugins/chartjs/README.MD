@@ -22,6 +22,11 @@ This plugin provides a comprehensive set of chart components built on top of Cha
 - **Bubble Chart**: For three-dimensional data (x, y, size)
 - **Polar Area Chart**: For polar coordinate visualization
 - **Scatter Chart**: For correlation between variables
+- **Doughnut Chart**: For part-to-whole relationships with a center cutout
+- **Stack Chart**: For showing part-to-whole relationships over a dimension
+- **Waterfall Chart**: For showing how positive/negative values contribute to a total
+- **Heatmap Chart**: For showing data density across two dimensions
+- **Table Chart**: For showing raw data in a tabular format
 
 ## Common Data Format
 
@@ -122,6 +127,76 @@ registerChartComponent("myCustom", MyCustomChart);
 // Later, use your registered component
 const MyChart = getChartComponent("myCustom");
 ```
+
+## Heatmap Chart
+
+The heatmap chart is built with D3.js and provides a way to visualize matrix data where color intensity represents values.
+
+### Features
+
+- Color intensity mapping for values
+- Customizable color scales and interpolation methods
+- Optional cell value display
+- Automatic text color contrast adjustment
+- Interactive tooltips
+- Color legend with configurable ticks
+- Animation support
+- Full dark mode support
+
+### Example Usage
+
+```typescript
+import { HeatmapChartComponent, ChartType } from '@plugins/chartjs';
+
+// Sample data
+const heatmapData = {
+  items: [
+    { label: "Item A", value: 10, category: "Category 1" },
+    { label: "Item B", value: 20, category: "Category 1" },
+    { label: "Item C", value: 30, category: "Category 2" },
+    { label: "Item A", value: 40, category: "Category 2" },
+    { label: "Item B", value: 50, category: "Category 3" },
+    { label: "Item C", value: 60, category: "Category 3" }
+  ]
+};
+
+// Sample component
+function MyHeatmap() {
+  return (
+    <HeatmapChartComponent
+      metadata={{
+        title: "Value Distribution",
+        description: "Heatmap showing value distribution across categories and items"
+      }}
+      data={heatmapData}
+      config={{
+        title: 'Value Distribution Matrix',
+        xAxisLabel: 'Categories',
+        yAxisLabel: 'Items',
+        showValues: true,
+        valueFormat: '.0f',
+        colorInterpolation: 'hsl'
+      }}
+    />
+  );
+}
+```
+
+The heatmap chart takes the following configuration options:
+
+- `title`: Title displayed at the top of the chart
+- `xAxisLabel`: Label for the x-axis
+- `yAxisLabel`: Label for the y-axis
+- `showLegend`: Whether to display the chart legend
+- `colorScale`: Array of colors for the heatmap cells
+- `colorDomain`: Fixed domain for the color scale [min, max]
+- `colorInterpolation`: Method for interpolating colors ('rgb', 'hsl', 'lab', 'hcl')
+- `showValues`: Whether to show cell values
+- `valueFormat`: D3 format string for cell values
+- `valueColor`: Text color for cell values or 'auto' for contrast detection
+- `cellPadding`: Padding between cells in pixels
+- `cellRadius`: Corner radius for cells in pixels
+- `animationDuration`: Duration of animations in milliseconds
 
 ## Contributing
 

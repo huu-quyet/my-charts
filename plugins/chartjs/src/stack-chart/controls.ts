@@ -1,18 +1,17 @@
 import { ChartOptions } from 'chart.js';
 import { CommonDataset, DEFAULT_LIGHT_THEME, DEFAULT_DARK_THEME } from '../types';
-import { BarChartConfig } from './types';
+import { StackChartConfig } from './types';
 
 /**
- * Prepare bar chart data for rendering with Chart.js
+ * Prepare stack chart data for rendering with Chart.js
  * Transforms the common dataset into the format expected by Chart.js
- * Groups data by category for multi-series bar charts
  * 
  * @param data The common dataset
- * @param config The bar chart config
+ * @param config The stack chart config
  * @param isDarkMode Whether the UI is in dark mode
  * @returns Chart.js compatible data object
  */
-export function prepareBarChartData(data: CommonDataset, config: BarChartConfig, isDarkMode: boolean) {
+export function prepareStackChartData(data: CommonDataset, config: StackChartConfig, isDarkMode: boolean) {
     const theme = isDarkMode ? DEFAULT_DARK_THEME : DEFAULT_LIGHT_THEME;
 
     // Group data by category
@@ -37,14 +36,34 @@ export function prepareBarChartData(data: CommonDataset, config: BarChartConfig,
     const chartJSDatasets = Array.from(dataByCategory.entries()).map(([category, values], index) => {
         const backgroundColor = theme.backgroundColor[index % theme.backgroundColor.length];
 
+        // For percentage charts, convert values to percentages for each label
+        let data = sortedLabels.map(label => values.get(label) || 0);
+
+        if (config.percentage) {
+            // Calculate total for each label position across categories
+            const totals = sortedLabels.map((label) => {
+                let total = 0;
+                Array.from(dataByCategory.values()).forEach(categoryValues => {
+                    total += categoryValues.get(label) || 0;
+                });
+                return total;
+            });
+
+            // Convert to percentages
+            data = data.map((value, i) => {
+                return totals[i] ? (value / totals[i]) * 100 : 0;
+            });
+        }
+
         return {
             label: category,
-            data: sortedLabels.map(label => values.get(label) || 0),
+            data,
             backgroundColor,
             borderColor: backgroundColor, // Same as background color
             borderWidth: 0, // No borders
-            borderRadius: config.borderRadius || 4,
-            barPercentage: 0.8,
+            borderRadius: config.borderRadius || 0,
+            barPercentage: 0.9,
+            categoryPercentage: 0.9,
         };
     });
 
@@ -58,12 +77,27 @@ export function prepareBarChartData(data: CommonDataset, config: BarChartConfig,
  * Prepare chart options based on configuration
  * Sets up the Chart.js options object with proper theme and user config
  * 
- * @param config The bar chart configuration
+ * @param config The stack chart configuration
  * @param isDarkMode Whether the UI is in dark mode
  * @returns Chart.js options object
  */
-export function prepareBarChartOptions(config: BarChartConfig, isDarkMode: boolean): ChartOptions<'bar'> {
+export function prepareStackChartOptions(config: StackChartConfig, isDarkMode: boolean): ChartOptions<'bar'> {
     const theme = isDarkMode ? DEFAULT_DARK_THEME : DEFAULT_LIGHT_THEME;
+
+    // Custom tooltip for percentage display
+    const tooltipCallback = config.percentage ? {
+        callbacks: {
+            label: (context: {
+                dataset: { label?: string };
+                parsed: { y?: number } | number;
+            }) => {
+                const label = context.dataset.label || '';
+                const value = typeof context.parsed === 'object' ? context.parsed.y : context.parsed;
+                const safeValue = typeof value === 'number' ? value : 0;
+                return `${label}: ${safeValue.toFixed(1)}%`;
+            }
+        }
+    } : {};
 
     return {
         responsive: true,
@@ -71,7 +105,7 @@ export function prepareBarChartOptions(config: BarChartConfig, isDarkMode: boole
         indexAxis: config.horizontal ? 'y' : 'x',
         scales: {
             x: {
-                stacked: !!config.stacked,
+                stacked: true, // Always stacked for stack charts
                 title: {
                     display: !!config.xAxisLabel,
                     text: config.xAxisLabel || '',
@@ -85,14 +119,18 @@ export function prepareBarChartOptions(config: BarChartConfig, isDarkMode: boole
                 }
             },
             y: {
-                stacked: !!config.stacked,
+                stacked: true, // Always stacked for stack charts
                 title: {
                     display: !!config.yAxisLabel,
                     text: config.yAxisLabel || '',
                     color: theme.textColor
                 },
                 ticks: {
-                    color: theme.textColor
+                    color: theme.textColor,
+                    // Add '%' to y-axis ticks for percentage charts
+                    callback: config.percentage ? function (value) {
+                        return value + '%';
+                    } : undefined
                 },
                 grid: {
                     color: theme.gridColor
@@ -132,6 +170,7 @@ export function prepareBarChartOptions(config: BarChartConfig, isDarkMode: boole
                 backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.8)',
                 titleColor: isDarkMode ? '#fff' : '#000',
                 bodyColor: isDarkMode ? '#ddd' : '#333',
+                ...tooltipCallback
             },
             ...config.options?.plugins
         },

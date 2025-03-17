@@ -1,9 +1,8 @@
-.pie-chart-container {
-  min-width: 600px;
-  max-width: 100%;
+.stack-chart-container {
+  margin-bottom: 2rem;
 }
 
-.pie-chart {
+.stack-chart {
   position: relative;
   min-height: 400px;
   max-height: 100%;
@@ -25,7 +24,6 @@
   text-align: left;
 }
 
-/* Dark mode styles */
 @media (prefers-color-scheme: dark) {
   .chart-description {
     color: #aaa;

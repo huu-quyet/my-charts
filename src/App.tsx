@@ -1,18 +1,12 @@
 import './App.css'
 import {
-  PieChartComponent,
-  LineChartComponent,
-  BarChartComponent,
-  RadarChartComponent,
-  BubbleChartComponent,
-  PolarAreaChartComponent,
-  ScatterChartComponent,
   ChartMetadata,
   CommonDataset,
+  DynamicChart,
+  ChartType,
 } from '@plugins/chartjs'
 
 function App() {
-
   // Sample metadata
   const chartMetadata: ChartMetadata = {
     title: "Chart Demo",
@@ -120,13 +114,66 @@ function App() {
     ]
   }
 
+  // Stack chart dataset
+  const stackDataset: CommonDataset = {
+    items: [
+      { label: "Q1", value: 300, category: "Product A" },
+      { label: "Q2", value: 400, category: "Product A" },
+      { label: "Q3", value: 350, category: "Product A" },
+      { label: "Q4", value: 500, category: "Product A" },
+      { label: "Q1", value: 250, category: "Product B" },
+      { label: "Q2", value: 350, category: "Product B" },
+      { label: "Q3", value: 450, category: "Product B" },
+      { label: "Q4", value: 400, category: "Product B" },
+      { label: "Q1", value: 150, category: "Product C" },
+      { label: "Q2", value: 200, category: "Product C" },
+      { label: "Q3", value: 250, category: "Product C" },
+      { label: "Q4", value: 300, category: "Product C" }
+    ]
+  }
+
+  // Heatmap dataset
+  const heatmapDataset: CommonDataset = {
+    items: [
+      { label: "Item A", value: 10, category: "Category 1" },
+      { label: "Item B", value: 20, category: "Category 1" },
+      { label: "Item C", value: 30, category: "Category 1" },
+      { label: "Item D", value: 40, category: "Category 1" },
+      { label: "Item A", value: 50, category: "Category 2" },
+      { label: "Item B", value: 60, category: "Category 2" },
+      { label: "Item C", value: 70, category: "Category 2" },
+      { label: "Item D", value: 80, category: "Category 2" },
+      { label: "Item A", value: 90, category: "Category 3" },
+      { label: "Item B", value: 100, category: "Category 3" },
+      { label: "Item C", value: 45, category: "Category 3" },
+      { label: "Item D", value: 25, category: "Category 3" },
+      { label: "Item A", value: 65, category: "Category 4" },
+      { label: "Item B", value: 85, category: "Category 4" },
+      { label: "Item C", value: 15, category: "Category 4" },
+      { label: "Item D", value: 55, category: "Category 4" }
+    ]
+  }
+
+  // Add floating chart dataset
+  const floatingDataset: CommonDataset = {
+    items: [
+      { label: "A", value: 20, category: "Series 1", extraData: { min: 10, max: 30 } },
+      { label: "B", value: 35, category: "Series 1", extraData: { min: 25, max: 45 } },
+      { label: "C", value: 25, category: "Series 1", extraData: { min: 15, max: 35 } },
+      { label: "A", value: 15, category: "Series 2", extraData: { min: 5, max: 25 } },
+      { label: "B", value: 40, category: "Series 2", extraData: { min: 30, max: 50 } },
+      { label: "C", value: 30, category: "Series 2", extraData: { min: 20, max: 40 } }
+    ]
+  }
+
   return (
     <div className='chart-list'>
       <h1>Viz Platform</h1>
       <div className="chart-container">
         <div className="chart-demo">
           <h2>Pie Chart</h2>
-          <PieChartComponent
+          <DynamicChart
+            chartType={ChartType.PIE}
             metadata={chartMetadata}
             data={commonDataset}
             config={{
@@ -139,7 +186,8 @@ function App() {
 
         <div className="chart-demo">
           <h2>Line Chart</h2>
-          <LineChartComponent
+          <DynamicChart
+            chartType={ChartType.LINE}
             metadata={chartMetadata}
             data={timeSeriesDataset}
             config={{
@@ -154,7 +202,8 @@ function App() {
 
         <div className="chart-demo">
           <h2>Bar Chart</h2>
-          <BarChartComponent
+          <DynamicChart
+            chartType={ChartType.BAR}
             metadata={chartMetadata}
             data={yearsDataset}
             config={{
@@ -162,15 +211,29 @@ function App() {
               xAxisLabel: 'Year',
               yAxisLabel: 'Value',
               borderRadius: 4,
-              horizontal: false,
-              stacked: false
+            }}
+          />
+        </div>
+
+        <div className="chart-demo">
+          <h2>Horizontal Bar Chart</h2>
+          <DynamicChart
+            chartType={ChartType.HORIZONTAL_BAR}
+            metadata={chartMetadata}
+            data={yearsDataset}
+            config={{
+              title: 'Annual Performance',
+              xAxisLabel: 'Year',
+              yAxisLabel: 'Value',
+              borderRadius: 4,
             }}
           />
         </div>
 
         <div className="chart-demo">
           <h2>Radar Chart</h2>
-          <RadarChartComponent
+          <DynamicChart
+            chartType={ChartType.RADAR}
             metadata={chartMetadata}
             data={radarDataset}
             config={{
@@ -182,7 +245,8 @@ function App() {
 
         <div className="chart-demo">
           <h2>Bubble Chart</h2>
-          <BubbleChartComponent
+          <DynamicChart
+            chartType={ChartType.BUBBLE}
             metadata={chartMetadata}
             data={bubbleDataset}
             config={{
@@ -197,7 +261,8 @@ function App() {
 
         <div className="chart-demo">
           <h2>Polar Area Chart</h2>
-          <PolarAreaChartComponent
+          <DynamicChart
+            chartType={ChartType.POLAR_AREA}
             metadata={chartMetadata}
             data={commonDataset}
             config={{
@@ -211,7 +276,8 @@ function App() {
 
         <div className="chart-demo">
           <h2>Scatter Plot</h2>
-          <ScatterChartComponent
+          <DynamicChart
+            chartType={ChartType.SCATTER}
             metadata={chartMetadata}
             data={scatterDataset}
             config={{
@@ -220,6 +286,92 @@ function App() {
               yAxisLabel: 'Y Axis',
               pointRadius: 6,
               showLegend: true
+            }}
+          />
+        </div>
+
+        {/* New chart demos below */}
+        <div className="chart-demo">
+          <h2>Doughnut Chart</h2>
+          <DynamicChart
+            chartType={ChartType.DOUGHNUT}
+            metadata={chartMetadata}
+            data={commonDataset}
+            config={{
+              title: 'Distribution with Center',
+              showLegend: true,
+              cutout: '60%',
+            }}
+          />
+        </div>
+
+        <div className="chart-demo">
+          <h2>Stack Chart</h2>
+          <DynamicChart
+            chartType={ChartType.STACK}
+            metadata={chartMetadata}
+            data={stackDataset}
+            config={{
+              title: 'Quarterly Product Performance',
+              xAxisLabel: 'Quarter',
+              yAxisLabel: 'Sales ($)',
+              borderRadius: 4,
+              showLegend: true
+            }}
+          />
+        </div>
+
+        <div className="chart-demo">
+          <h2>Stack Chart (Percentage)</h2>
+          <DynamicChart
+            chartType={ChartType.STACK}
+            metadata={chartMetadata}
+            data={stackDataset}
+            config={{
+              title: 'Quarterly Product Percentage',
+              xAxisLabel: 'Quarter',
+              yAxisLabel: 'Percentage',
+              showLegend: true,
+              percentage: true
+            }}
+          />
+        </div>
+
+        {/* Add Heatmap Chart Demo */}
+        <div className="chart-demo">
+          <h2>Heatmap Chart</h2>
+          <DynamicChart
+            chartType={ChartType.HEATMAP}
+            metadata={chartMetadata}
+            data={heatmapDataset}
+            config={{
+              title: 'Value Distribution Matrix',
+              xAxisLabel: 'Categories',
+              yAxisLabel: 'Items',
+              showValues: true,
+              showColorLegend: true,
+              valueFormat: '.0f',
+              cellPadding: 4,
+              cellRadius: 2,
+              animationDuration: 800,
+              colorInterpolation: 'hsl'
+            }}
+          />
+        </div>
+
+        {/* Add floating chart demo */}
+        <div className="chart-demo">
+          <h2>Floating Bar Chart</h2>
+          <DynamicChart
+            chartType={ChartType.FLOATING}
+            metadata={chartMetadata}
+            data={floatingDataset}
+            config={{
+              title: 'Value Ranges',
+              xAxisLabel: 'Categories',
+              yAxisLabel: 'Values',
+              showLegend: true,
+              borderRadius: 4
             }}
           />
         </div>

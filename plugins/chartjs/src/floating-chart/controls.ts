@@ -1,68 +1,45 @@
 import { ChartOptions } from 'chart.js';
 import { CommonDataset, DEFAULT_LIGHT_THEME, DEFAULT_DARK_THEME } from '../types';
-import { BarChartConfig } from './types';
+import { FloatingChartConfig } from './types';
 
-/**
- * Prepare bar chart data for rendering with Chart.js
- * Transforms the common dataset into the format expected by Chart.js
- * Groups data by category for multi-series bar charts
- * 
- * @param data The common dataset
- * @param config The bar chart config
- * @param isDarkMode Whether the UI is in dark mode
- * @returns Chart.js compatible data object
- */
-export function prepareBarChartData(data: CommonDataset, config: BarChartConfig, isDarkMode: boolean) {
+export function prepareFloatingChartData(data: CommonDataset, config: FloatingChartConfig, isDarkMode: boolean) {
     const theme = isDarkMode ? DEFAULT_DARK_THEME : DEFAULT_LIGHT_THEME;
 
     // Group data by category
-    const dataByCategory = new Map<string, Map<string, number>>();
-    const labels = new Set<string>();
+    const categories = Array.from(new Set(data.items.map(item => item.category || 'Default')));
+    const labels = Array.from(new Set(data.items.map(item => item.label)));
 
-    // First pass: collect unique labels and categories
-    data.items.forEach(item => {
-        labels.add(item.label);
-        const category = item.category || 'Default';
-
-        if (!dataByCategory.has(category)) {
-            dataByCategory.set(category, new Map<string, number>());
-        }
-
-        dataByCategory.get(category)!.set(item.label, item.value);
-    });
-
-    const sortedLabels = Array.from(labels);
-
-    // Create Chart.js datasets
-    const chartJSDatasets = Array.from(dataByCategory.entries()).map(([category, values], index) => {
+    const datasets = categories.map((category, index) => {
         const backgroundColor = theme.backgroundColor[index % theme.backgroundColor.length];
+        const categoryData = labels.map(label => {
+            const item = data.items.find(i => i.label === label && (i.category || 'Default') === category);
+            if (!item) return null;
+
+            const value = item.value;
+            const minValue = item.extraData?.min as number ?? value;
+            const maxValue = item.extraData?.max as number ?? value;
+
+            return [minValue, maxValue];
+        });
 
         return {
             label: category,
-            data: sortedLabels.map(label => values.get(label) || 0),
+            data: categoryData,
             backgroundColor,
-            borderColor: backgroundColor, // Same as background color
-            borderWidth: 0, // No borders
+            borderColor: backgroundColor,
+            borderWidth: 0,
             borderRadius: config.borderRadius || 4,
-            barPercentage: 0.8,
+            borderSkipped: false
         };
     });
 
     return {
-        labels: sortedLabels,
-        datasets: chartJSDatasets
+        labels,
+        datasets
     };
 }
 
-/**
- * Prepare chart options based on configuration
- * Sets up the Chart.js options object with proper theme and user config
- * 
- * @param config The bar chart configuration
- * @param isDarkMode Whether the UI is in dark mode
- * @returns Chart.js options object
- */
-export function prepareBarChartOptions(config: BarChartConfig, isDarkMode: boolean): ChartOptions<'bar'> {
+export function prepareFloatingChartOptions(config: FloatingChartConfig, isDarkMode: boolean): ChartOptions<'bar'> {
     const theme = isDarkMode ? DEFAULT_DARK_THEME : DEFAULT_LIGHT_THEME;
 
     return {
@@ -71,32 +48,22 @@ export function prepareBarChartOptions(config: BarChartConfig, isDarkMode: boole
         indexAxis: config.horizontal ? 'y' : 'x',
         scales: {
             x: {
-                stacked: !!config.stacked,
                 title: {
                     display: !!config.xAxisLabel,
                     text: config.xAxisLabel || '',
                     color: theme.textColor
                 },
-                ticks: {
-                    color: theme.textColor
-                },
-                grid: {
-                    color: theme.gridColor
-                }
+                ticks: { color: theme.textColor },
+                grid: { color: theme.gridColor }
             },
             y: {
-                stacked: !!config.stacked,
                 title: {
                     display: !!config.yAxisLabel,
                     text: config.yAxisLabel || '',
                     color: theme.textColor
                 },
-                ticks: {
-                    color: theme.textColor
-                },
-                grid: {
-                    color: theme.gridColor
-                }
+                ticks: { color: theme.textColor },
+                grid: { color: theme.gridColor }
             }
         },
         plugins: {

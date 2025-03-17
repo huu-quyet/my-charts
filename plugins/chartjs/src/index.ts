@@ -20,6 +20,11 @@ export * from './radar-chart';
 export * from './bubble-chart';
 export * from './polar-area-chart';
 export * from './scatter-chart';
+export * from './doughnut-chart';
+export * from './stack-chart';
+export * from './heatmap-chart';
+export * from './floating-chart';
+export * from './horizontal-bar-chart';
 
 // Export core types and utilities
 export * from './types';
@@ -38,3 +43,11 @@ export * from './radar-chart/controls';
 export * from './bubble-chart/controls';
 export * from './polar-area-chart/controls';
 export * from './scatter-chart/controls';
+export * from './doughnut-chart/controls';
+export * from './stack-chart/controls';
+export * from './heatmap-chart/controls';
+export * from './floating-chart/controls';
+export * from './horizontal-bar-chart/controls';
+
+// Export dynamic chart component
+export * from './DynamicChart';
