@@ -1,12 +1,13 @@
 .doughnut-chart-container {
-  margin-bottom: 2rem;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .doughnut-chart {
   position: relative;
-  min-height: 400px;
-  max-height: 100%;
-  width: 100%;
+  flex-grow: 1;
 }
 
 .chart-title {

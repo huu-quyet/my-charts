@@ -47,8 +47,6 @@ export const PieChartComponent: React.FC<PieChartProps> = ({
             <div className="chart-wrapper pie-chart">
                 <Pie data={chartData} options={chartOptions} />
             </div>
-
-
         </div>
     );
 };

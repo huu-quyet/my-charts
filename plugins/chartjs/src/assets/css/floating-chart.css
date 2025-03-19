@@ -1,13 +1,13 @@
 .floating-chart-container {
-  position: relative;
-  margin-bottom: 2rem;
   width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .floating-chart {
   position: relative;
-  width: 100%;
-  height: 500px;
+  flex-grow: 1;
   background-color: transparent;
 }
 
