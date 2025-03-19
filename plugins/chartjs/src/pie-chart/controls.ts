@@ -1,6 +1,7 @@
 import { ChartOptions } from 'chart.js';
 import { CommonDataset, CommonDataItem, DEFAULT_LIGHT_THEME, DEFAULT_DARK_THEME } from '../types';
 import { PieChartConfig } from './types';
+import { formatLargeNumber } from '../utils';
 
 /**
  * Convert common dataset format to pie chart specific format
@@ -95,6 +96,13 @@ export function preparePieChartOptions(config: PieChartConfig, isDarkMode: boole
                 }
             },
             tooltip: {
+                callbacks: {
+                    label: (context) => {
+                        const label = context.label || '';
+                        const value = context.raw as number;
+                        return `${label}: ${formatLargeNumber(value)}`;
+                    }
+                },
                 backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.8)',
                 titleColor: isDarkMode ? '#fff' : '#000',
                 bodyColor: isDarkMode ? '#ddd' : '#333',

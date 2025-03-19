@@ -1,6 +1,7 @@
 import { ChartOptions } from 'chart.js';
 import { CommonDataset, DEFAULT_LIGHT_THEME, DEFAULT_DARK_THEME } from '../types';
 import { LineChartConfig } from './types';
+import { formatLargeNumber } from '../utils';
 
 /**
  * Prepare line chart data for rendering with Chart.js
@@ -43,7 +44,8 @@ export function prepareLineChartData(data: CommonDataset, config: LineChartConfi
     // Create Chart.js datasets
     const chartJSDatasets = Array.from(dataByCategory.entries()).map(([category, points], index) => {
         const backgroundColor = theme.backgroundColor[index % theme.backgroundColor.length];
-        const borderColor = backgroundColor; // Same as background color for consistent look
+        // Convert rgba(r,g,b,0.8) to rgba(r,g,b,1)
+        const borderColor = backgroundColor.replace(/rgba\((\d+,\s*\d+,\s*\d+),\s*0\.8\)/, 'rgba($1, 1)');
 
         return {
             label: category,
@@ -51,12 +53,14 @@ export function prepareLineChartData(data: CommonDataset, config: LineChartConfi
             fill: false,
             backgroundColor,
             borderColor,
-            borderWidth: 2, // Keep this for line visibility
-            tension: config.tension || 0.4,
-            pointRadius: config.showPoints ? 4 : 0,
+            borderWidth: 4,
+            tension: 0.6,
+            pointRadius: 10,
             pointBackgroundColor: borderColor,
-            pointBorderColor: 'transparent', // Transparent point borders
-            pointHoverRadius: 6
+            pointBorderColor: 'white',
+            pointHoverRadius: 12,
+            pointBorderWidth: 2,
+            pointOpacity: 1,
         };
     });
 
@@ -82,29 +86,37 @@ export function prepareLineChartOptions(config: LineChartConfig, isDarkMode: boo
         scales: {
             x: {
                 type: 'category',
-                title: {
-                    display: !!config.xAxisLabel,
-                    text: config.xAxisLabel || '',
-                    color: theme.textColor
-                },
                 ticks: {
-                    color: theme.textColor
+                    color: theme.textColor,
+                    display: true, // Keep the values visible
+                    padding: 16
+                },
+                border: {
+                    display: false,
+                    dashOffset: 10,
+                    dash: [10],
+                    color: theme.gridColor,
                 },
                 grid: {
                     color: theme.gridColor
                 }
             },
             y: {
-                title: {
-                    display: !!config.yAxisLabel,
-                    text: config.yAxisLabel || '',
-                    color: theme.textColor
-                },
                 ticks: {
-                    color: theme.textColor
+                    color: theme.textColor,
+                    callback: (value) => {
+                        if (typeof value === 'number') {
+                            return formatLargeNumber(value);
+                        }
+                        return value;
+                    },
+                    padding: 16
                 },
                 grid: {
-                    color: theme.gridColor
+                    display: false // Hide only the grid lines
+                },
+                border: {
+                    display: false // Hide the axis border
                 }
             }
         },

@@ -2,6 +2,7 @@ import { ChartOptions, Plugin } from 'chart.js';
 import { CommonDataset, DEFAULT_LIGHT_THEME, DEFAULT_DARK_THEME } from '../types';
 import { DoughnutChartConfig } from './types';
 import { Chart } from 'chart.js';
+import { formatLargeNumber } from '../utils';
 
 /**
  * Prepare doughnut chart data for rendering with Chart.js
@@ -83,7 +84,7 @@ export function prepareDoughnutChartOptions(config: DoughnutChartConfig, isDarkM
     return {
         responsive: true,
         maintainAspectRatio: false,
-        cutout: config.cutout || '77%', // Default cutout for doughnut is 77%
+        cutout: config.cutout || '60%', // Default cutout for doughnut is 60%
         rotation: config.rotation ? Math.PI * config.rotation / 180 : undefined,
         plugins: {
             doughnutCenterText: centerTextPlugin,
@@ -116,6 +117,13 @@ export function prepareDoughnutChartOptions(config: DoughnutChartConfig, isDarkM
                 }
             },
             tooltip: {
+                callbacks: {
+                    label: (context) => {
+                        const label = context.label || '';
+                        const value = context.raw as number;
+                        return `${label}: ${formatLargeNumber(value)}`;
+                    }
+                },
                 backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.8)',
                 titleColor: isDarkMode ? '#fff' : '#000',
                 bodyColor: isDarkMode ? '#ddd' : '#333',

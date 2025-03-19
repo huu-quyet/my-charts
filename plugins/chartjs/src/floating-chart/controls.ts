@@ -1,6 +1,7 @@
 import { ChartOptions } from 'chart.js';
 import { CommonDataset, DEFAULT_LIGHT_THEME, DEFAULT_DARK_THEME } from '../types';
 import { FloatingChartConfig } from './types';
+import { formatLargeNumber } from '../utils';
 
 export function prepareFloatingChartData(data: CommonDataset, config: FloatingChartConfig, isDarkMode: boolean) {
     const theme = isDarkMode ? DEFAULT_DARK_THEME : DEFAULT_LIGHT_THEME;
@@ -28,8 +29,10 @@ export function prepareFloatingChartData(data: CommonDataset, config: FloatingCh
             backgroundColor,
             borderColor: backgroundColor,
             borderWidth: 0,
-            borderRadius: config.borderRadius || 4,
-            borderSkipped: false
+            borderRadius: 8,
+            borderSkipped: false,
+            // Bar width configuration
+            maxBarThickness: 42,     // Maximum width if specified
         };
     });
 
@@ -48,22 +51,41 @@ export function prepareFloatingChartOptions(config: FloatingChartConfig, isDarkM
         indexAxis: config.horizontal ? 'y' : 'x',
         scales: {
             x: {
-                title: {
-                    display: !!config.xAxisLabel,
-                    text: config.xAxisLabel || '',
-                    color: theme.textColor
+                ticks: {
+                    color: theme.textColor,
+                    callback: (value) => {
+                        if (config.horizontal && typeof value === 'number') {
+                            return formatLargeNumber(value);
+                        }
+                        return value;
+                    },
+                    display: false
                 },
-                ticks: { color: theme.textColor },
-                grid: { color: theme.gridColor }
+                grid: {
+                    display: false, // Hide only the grid lines
+                },
+                border: {
+                    display: false // Hide the axis border
+                },
             },
             y: {
-                title: {
-                    display: !!config.yAxisLabel,
-                    text: config.yAxisLabel || '',
-                    color: theme.textColor
+                ticks: {
+                    color: theme.textColor,
+                    callback: (value) => {
+                        if (!config.horizontal && typeof value === 'number') {
+                            return formatLargeNumber(value);
+                        }
+                        return value;
+                    },
+                    padding: 16,
                 },
-                ticks: { color: theme.textColor },
-                grid: { color: theme.gridColor }
+                grid: { color: theme.gridColor },
+                border: {
+                    display: false, // Hide the axis border,
+                    dashOffset: 10,
+                    dash: [10],
+                    color: theme.gridColor,
+                }
             }
         },
         plugins: {
@@ -96,6 +118,13 @@ export function prepareFloatingChartOptions(config: FloatingChartConfig, isDarkM
                 }
             },
             tooltip: {
+                callbacks: {
+                    label: (context) => {
+                        const label = context.dataset.label || '';
+                        const values = context.raw as [number, number];
+                        return `${label}: [${formatLargeNumber(values[0])}, ${formatLargeNumber(values[1])}]`;
+                    }
+                },
                 backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.8)',
                 titleColor: isDarkMode ? '#fff' : '#000',
                 bodyColor: isDarkMode ? '#ddd' : '#333',

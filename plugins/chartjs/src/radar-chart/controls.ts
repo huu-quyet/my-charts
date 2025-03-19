@@ -1,6 +1,7 @@
 import { ChartOptions } from 'chart.js';
 import { CommonDataset, DEFAULT_LIGHT_THEME, DEFAULT_DARK_THEME } from '../types';
 import { RadarChartConfig } from './types';
+import { formatLargeNumber } from '../utils';
 
 /**
  * Prepare radar chart data for rendering with Chart.js
@@ -87,6 +88,12 @@ export function prepareRadarChartOptions(config: RadarChartConfig, isDarkMode: b
                 ticks: {
                     color: theme.textColor,
                     backdropColor: isDarkMode ? 'rgba(0, 0, 0, 0.3)' : 'rgba(255, 255, 255, 0.3)',
+                    callback: (value) => {
+                        if (typeof value === 'number') {
+                            return formatLargeNumber(value);
+                        }
+                        return value;
+                    }
                 },
             }
         },

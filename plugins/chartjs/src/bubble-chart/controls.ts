@@ -1,6 +1,7 @@
 import { ChartOptions } from 'chart.js';
 import { CommonDataset, DEFAULT_LIGHT_THEME, DEFAULT_DARK_THEME } from '../types';
 import { BubbleChartConfig } from './types';
+import { formatLargeNumber } from '../utils';
 
 /**
  * Prepare bubble chart data for rendering with Chart.js
@@ -85,29 +86,45 @@ export function prepareBubbleChartOptions(config: BubbleChartConfig, isDarkMode:
         aspectRatio: config.aspectRatio || 1.5,
         scales: {
             x: {
-                title: {
-                    display: !!config.xAxisLabel,
-                    text: config.xAxisLabel || '',
-                    color: theme.textColor
-                },
                 ticks: {
-                    color: theme.textColor
+                    color: theme.textColor,
+                    callback: (value) => {
+                        if (typeof value === 'number') {
+                            return formatLargeNumber(value);
+                        }
+                        return value;
+                    },
+                    padding: 16
                 },
                 grid: {
                     color: theme.gridColor
+                },
+                border: {
+                    display: false, // Hide the axis border,
+                    dashOffset: 10,
+                    dash: [10],
+                    color: theme.gridColor,
                 }
             },
             y: {
-                title: {
-                    display: !!config.yAxisLabel,
-                    text: config.yAxisLabel || '',
-                    color: theme.textColor
-                },
                 ticks: {
-                    color: theme.textColor
+                    color: theme.textColor,
+                    callback: (value) => {
+                        if (typeof value === 'number') {
+                            return formatLargeNumber(value);
+                        }
+                        return value;
+                    },
+                    padding: 16
                 },
                 grid: {
                     color: theme.gridColor
+                },
+                border: {
+                    display: false, // Hide the axis border,
+                    dashOffset: 10,
+                    dash: [10],
+                    color: theme.gridColor,
                 }
             }
         },
@@ -146,8 +163,8 @@ export function prepareBubbleChartOptions(config: BubbleChartConfig, isDarkMode:
                         const datapoint = item.raw as { x: number, y: number, r: number };
                         const sizeLabel = config.sizeLabel || 'Size';
                         return [
-                            `${item.dataset.label}: (${item.label}, ${item.formattedValue})`,
-                            `${sizeLabel}: ${datapoint.r}`
+                            `${item.dataset.label}: (${formatLargeNumber(datapoint.x)}, ${formatLargeNumber(datapoint.y)})`,
+                            `${sizeLabel}: ${formatLargeNumber(datapoint.r)}`
                         ];
                     }
                 },

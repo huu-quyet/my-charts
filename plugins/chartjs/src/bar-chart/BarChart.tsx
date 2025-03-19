@@ -7,7 +7,7 @@ import {
     BarElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
 } from 'chart.js';
 import { BarChartProps } from './types';
 import { isDarkMode as checkDarkMode } from '../utils';
@@ -29,10 +29,9 @@ export const BarChartComponent: React.FC<BarChartProps> = ({
     data,
     config = {},
 }) => {
-    // Determine theme based on system preference
     const isDarkMode = checkDarkMode();
 
-    // Prepare chart data directly from common dataset
+    // Prepare chart data and options
     const chartData = prepareBarChartData(data, config, isDarkMode);
     const chartOptions = prepareBarChartOptions(config, isDarkMode);
 
@@ -46,7 +45,10 @@ export const BarChartComponent: React.FC<BarChartProps> = ({
             )}
 
             <div className="chart-wrapper bar-chart">
-                <Bar data={chartData} options={chartOptions} />
+                <Bar
+                    data={chartData}
+                    options={chartOptions}
+                />
             </div>
         </div>
     );

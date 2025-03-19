@@ -1,3 +1,4 @@
+import { Chart, Plugin } from 'chart.js';
 import chartComponents from './ChartRegistry';
 import type { ChartComponentProps, ChartComponentPropsMap, ChartType } from './types';
 
@@ -29,3 +30,30 @@ export function registerChartComponent<T extends ChartType>(
 export function getChartComponent<T extends ChartType>(type: T): React.ComponentType<ChartComponentPropsMap[T]> | undefined {
     return chartComponents[type]?.component as React.ComponentType<ChartComponentPropsMap[T]> | undefined;
 }
+
+/**
+ * Registers a custom Chart.js plugin
+ * 
+ * @param plugin The plugin object to register
+ */
+// Create custom plugin for beforeInit hook
+const customPlugin: Plugin = {
+    id: 'customSpacing',
+    beforeInit: (chart) => {
+        // Access the chart instance before initialization
+        const legend = chart.legend;
+        if (!legend) return;
+        const originalFit = legend.fit;
+
+        // Override the legend fit function
+        legend.fit = function () {
+            originalFit.call(this);
+
+            // Add extra spacing after legend
+            this.height += 24;
+        };
+    }
+};
+
+// Register the custom plugin
+Chart.register(customPlugin);

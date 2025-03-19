@@ -31,20 +31,20 @@ function App() {
   // Time series dataset for line chart
   const timeSeriesDataset: CommonDataset = {
     items: [
-      { label: "January", value: 65, category: "Dataset 1", date: "2023-01-01" },
-      { label: "February", value: 59, category: "Dataset 1", date: "2023-02-01" },
-      { label: "March", value: 80, category: "Dataset 1", date: "2023-03-01" },
-      { label: "April", value: 81, category: "Dataset 1", date: "2023-04-01" },
-      { label: "May", value: 56, category: "Dataset 1", date: "2023-05-01" },
-      { label: "June", value: 55, category: "Dataset 1", date: "2023-06-01" },
-      { label: "July", value: 40, category: "Dataset 1", date: "2023-07-01" },
-      { label: "January", value: 28, category: "Dataset 2", date: "2023-01-01" },
-      { label: "February", value: 48, category: "Dataset 2", date: "2023-02-01" },
-      { label: "March", value: 40, category: "Dataset 2", date: "2023-03-01" },
-      { label: "April", value: 19, category: "Dataset 2", date: "2023-04-01" },
-      { label: "May", value: 86, category: "Dataset 2", date: "2023-05-01" },
-      { label: "June", value: 27, category: "Dataset 2", date: "2023-06-01" },
-      { label: "July", value: 90, category: "Dataset 2", date: "2023-07-01" },
+      { label: "January", value: 6500, category: "Dataset 1", date: "2023-01-01" },
+      { label: "February", value: 59000, category: "Dataset 1", date: "2023-02-01" },
+      { label: "March", value: 8000, category: "Dataset 1", date: "2023-03-01" },
+      { label: "April", value: 80001, category: "Dataset 1", date: "2023-04-01" },
+      { label: "May", value: 5000006, category: "Dataset 1", date: "2023-05-01" },
+      { label: "June", value: 55000, category: "Dataset 1", date: "2023-06-01" },
+      { label: "July", value: 40000, category: "Dataset 1", date: "2023-07-01" },
+      { label: "January", value: 20008, category: "Dataset 2", date: "2023-01-01" },
+      { label: "February", value: 400008, category: "Dataset 2", date: "2023-02-01" },
+      { label: "March", value: 4000, category: "Dataset 2", date: "2023-03-01" },
+      { label: "April", value: 1900000, category: "Dataset 2", date: "2023-04-01" },
+      { label: "May", value: 800006, category: "Dataset 2", date: "2023-05-01" },
+      { label: "June", value: 27000, category: "Dataset 2", date: "2023-06-01" },
+      { label: "July", value: 900000, category: "Dataset 2", date: "2023-07-01" },
     ]
   }
 

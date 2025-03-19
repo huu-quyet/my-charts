@@ -1,6 +1,7 @@
 import { ChartOptions } from 'chart.js';
 import { CommonDataset, DEFAULT_LIGHT_THEME, DEFAULT_DARK_THEME } from '../types';
 import { BarChartConfig } from './types';
+import { formatLargeNumber } from '../utils';
 
 /**
  * Prepare bar chart data for rendering with Chart.js
@@ -43,8 +44,12 @@ export function prepareBarChartData(data: CommonDataset, config: BarChartConfig,
             backgroundColor,
             borderColor: backgroundColor, // Same as background color
             borderWidth: 0, // No borders
-            borderRadius: config.borderRadius || 4,
+            borderRadius: 16,
             barPercentage: 0.8,
+            categoryPercentage: 0.8,
+            borderSkipped: false,
+            // Bar width configuration
+            maxBarThickness: 42,     // Maximum width if specified
         };
     });
 
@@ -78,24 +83,42 @@ export function prepareBarChartOptions(config: BarChartConfig, isDarkMode: boole
                     color: theme.textColor
                 },
                 ticks: {
-                    color: theme.textColor
+                    color: theme.textColor,
+                    display: true, // Keep the values visible
+                    callback: (value) => {
+                        // For horizontal bar charts, x-axis typically has values
+                        if (config.horizontal && typeof value === 'number') {
+                            return formatLargeNumber(value);
+                        }
+                        return value;
+                    }
                 },
                 grid: {
-                    color: theme.gridColor
-                }
+                    display: false // Hide only the grid lines
+                },
+                border: {
+                    display: false // Hide the axis border
+                },
             },
             y: {
                 stacked: !!config.stacked,
-                title: {
-                    display: !!config.yAxisLabel,
-                    text: config.yAxisLabel || '',
-                    color: theme.textColor
-                },
                 ticks: {
-                    color: theme.textColor
+                    color: theme.textColor,
+                    display: true, // Keep the values visible
+                    callback: (value) => {
+                        // For vertical bar charts, y-axis typically has values
+                        if (!config.horizontal && typeof value === 'number') {
+                            return formatLargeNumber(value);
+                        }
+                        return value;
+                    },
+                    padding: 16,
                 },
                 grid: {
-                    color: theme.gridColor
+                    display: false, // Hide only the grid lines
+                },
+                border: {
+                    display: false // Hide the axis border
                 }
             }
         },
@@ -126,7 +149,7 @@ export function prepareBarChartOptions(config: BarChartConfig, isDarkMode: boole
                 font: {
                     size: 18,
                     weight: 'bold',
-                }
+                },
             },
             tooltip: {
                 backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.8)',

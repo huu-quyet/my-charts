@@ -1,6 +1,7 @@
 import { ChartOptions } from 'chart.js';
 import { CommonDataset, DEFAULT_DARK_THEME, DEFAULT_LIGHT_THEME } from '../types';
 import { HorizontalBarChartConfig } from './types';
+import { formatLargeNumber } from '../utils';
 
 /**
  * Prepare horizontal bar chart data for rendering with Chart.js
@@ -43,8 +44,10 @@ export function prepareHorizontalBarChartData(data: CommonDataset, config: Horiz
             backgroundColor,
             borderColor: backgroundColor, // Same as background color
             borderWidth: 0, // No borders
-            borderRadius: config.borderRadius || 4,
-            barPercentage: 0.8
+            borderRadius: 8,
+            barPercentage: 0.8,
+            // Bar width configuration
+            maxBarThickness: 42,     // Maximum width if specified
         };
     });
 
@@ -72,31 +75,38 @@ export function prepareHorizontalBarChartOptions(config: HorizontalBarChartConfi
         scales: {
             x: {
                 stacked: !!config.stacked,
-                title: {
-                    display: !!config.xAxisLabel,
-                    text: config.xAxisLabel || '',
-                    color: theme.textColor
-                },
                 ticks: {
-                    color: theme.textColor
+                    color: theme.textColor,
+                    callback: (value) => {
+                        if (typeof value === 'number') {
+                            return formatLargeNumber(value);
+                        }
+                        return value;
+                    },
+                    padding: 16
                 },
                 grid: {
                     color: theme.gridColor
+                },
+                border: {
+                    display: false, // Hide the axis border
+                    dashOffset: 10,
+                    dash: [10],
+                    color: theme.gridColor,
                 }
             },
             y: {
                 stacked: !!config.stacked,
-                title: {
-                    display: !!config.yAxisLabel,
-                    text: config.yAxisLabel || '',
-                    color: theme.textColor
-                },
                 ticks: {
-                    color: theme.textColor
+                    color: theme.textColor,
+                    padding: 16
                 },
                 grid: {
-                    color: theme.gridColor
-                }
+                    display: false,
+                },
+                border: {
+                    display: false, // Hide the axis border
+                },
             }
         },
         plugins: {

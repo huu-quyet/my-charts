@@ -116,16 +116,16 @@ export interface ChartTheme {
  */
 export const DEFAULT_LIGHT_THEME: ChartTheme = {
     backgroundColor: [
-        'rgba(75, 192, 192, 0.7)',
-        'rgba(54, 162, 235, 0.7)',
-        'rgba(2,62,138, 1)',
-        'rgba(0,150,199, 1)',
-        'rgba(23,92,211,1)',
-        'rgba(3,4,94, 1)',
-        'rgba(0,119,182, 1)',
-        'rgba(56,175,250, 1)',
-        'rgba(239,248,255,1)',
-        'rgba(199, 199, 199, 0.7)',
+        'rgba(75, 192, 192, 0.8)',
+        'rgba(54, 162, 235, 0.8)',
+        'rgba(2,62,138, 0.8)',
+        'rgba(0,150,199, 0.8)',
+        'rgba(23,92,211,0.8)',
+        'rgba(3,4,94, 0.8)',
+        'rgba(0,119,182, 0.8)',
+        'rgba(56,175,250, 0.8)',
+        'rgba(239,248,255, 0.8)',
+        'rgba(199, 199, 199, 0.8)',
     ],
     borderColor: [
         'rgba(229,231,235,1)',
@@ -140,8 +140,8 @@ export const DEFAULT_LIGHT_THEME: ChartTheme = {
         'rgba(229,231,235,1)',
     ],
     gridColor: 'rgba(0, 0, 0, 0.1)',
-    textColor: '#666',
-    legendTextColor: '#666',
+    textColor: 'rgba(0, 0, 0, 0.87)',
+    legendTextColor: 'rgba(0, 0, 0, 0.87)',
 };
 
 /**
@@ -151,16 +151,16 @@ export const DEFAULT_LIGHT_THEME: ChartTheme = {
  */
 export const DEFAULT_DARK_THEME: ChartTheme = {
     backgroundColor: [
-        'rgba(75,121,198,1)',
-        'rgba(85,122,204,1)',
-        'rgba(81,166,220,1)',
-        'rgba(78,168,203,0.7)',
-        'rgba(83,168,163,0.7)',
+        'rgba(75,121,198, 0.8)',
+        'rgba(85,122,204,0.8)',
+        'rgba(81,166,220,0.8)',
+        'rgba(78,168,203,0.8)',
+        'rgba(83,168,163,0.8)',
         'rgba(98,101,121,1)',
-        'rgba(140,140,140,0.7)',
-        'rgba(101,113,209,0.7)',
-        'rgba(80,165,125,0.7)',
-        'rgba(209,87,95,0.7)',
+        'rgba(140,140,140,0.8)',
+        'rgba(101,113,209,0.8)',
+        'rgba(80,165,125,0.8)',
+        'rgba(209,87,95,0.8)',
     ],
     borderColor: [
         'rgba(100,100,100,1)',
@@ -174,9 +174,9 @@ export const DEFAULT_DARK_THEME: ChartTheme = {
         'rgba(100,100,100,1)',
         'rgba(100,100,100,1)',
     ],
-    gridColor: 'rgba(255, 255, 255, 0.15)',
-    textColor: '#eaeaea',
-    legendTextColor: '#eaeaea',
+    gridColor: '#f3f3f3',
+    textColor: 'rgba(255, 255, 255, 0.1)',
+    legendTextColor: 'rgba(0, 0, 0, 0.1)',
 };
 
 /**

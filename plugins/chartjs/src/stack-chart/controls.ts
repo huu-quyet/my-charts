@@ -1,6 +1,7 @@
 import { ChartOptions } from 'chart.js';
 import { CommonDataset, DEFAULT_LIGHT_THEME, DEFAULT_DARK_THEME } from '../types';
 import { StackChartConfig } from './types';
+import { formatLargeNumber } from '../utils';
 
 /**
  * Prepare stack chart data for rendering with Chart.js
@@ -61,9 +62,11 @@ export function prepareStackChartData(data: CommonDataset, config: StackChartCon
             backgroundColor,
             borderColor: backgroundColor, // Same as background color
             borderWidth: 0, // No borders
-            borderRadius: config.borderRadius || 0,
+            borderRadius: 16,
             barPercentage: 0.9,
             categoryPercentage: 0.9,
+            // Bar width configuration
+            maxBarThickness: 50,     // Maximum width if specified
         };
     });
 
@@ -112,28 +115,41 @@ export function prepareStackChartOptions(config: StackChartConfig, isDarkMode: b
                     color: theme.textColor
                 },
                 ticks: {
-                    color: theme.textColor
+                    color: theme.textColor,
+                    callback: (value) => {
+                        if (config.horizontal && typeof value === 'number' && !config.percentage) {
+                            return formatLargeNumber(value);
+                        }
+                        return value;
+                    }
                 },
                 grid: {
-                    color: theme.gridColor
+                    display: false, // Hide only the grid lines
+                },
+                border: {
+                    display: false // Hide the axis border
                 }
             },
             y: {
                 stacked: true, // Always stacked for stack charts
-                title: {
-                    display: !!config.yAxisLabel,
-                    text: config.yAxisLabel || '',
-                    color: theme.textColor
-                },
                 ticks: {
                     color: theme.textColor,
-                    // Add '%' to y-axis ticks for percentage charts
+                    // Add '%' to y-axis ticks for percentage charts or format large numbers
                     callback: config.percentage ? function (value) {
                         return value + '%';
-                    } : undefined
+                    } : function (value) {
+                        if (!config.horizontal && typeof value === 'number') {
+                            return formatLargeNumber(value);
+                        }
+                        return value;
+                    },
+                    display: false,
                 },
                 grid: {
-                    color: theme.gridColor
+                    display: false, // Hide only the grid lines
+                },
+                border: {
+                    display: false // Hide the axis border
                 }
             }
         },

@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
-import { prepareHeatmapData, createColorScale, formatValue, getContrastColor } from './controls';
+import { prepareHeatmapData, createColorScale, formatValue, getContrastColor, formatD3LargeNumber } from './controls';
 import { isDarkMode as checkDarkMode } from '../utils';
 import '../assets/css/heatmap-chart.css';
 import { HeatmapChartProps } from './types';
@@ -244,7 +244,9 @@ export const HeatmapChartComponent: React.FC<HeatmapChartProps> = ({
 
             const legendAxis = d3.axisRight(legendScale)
                 .ticks(colorLegendTicks)
-                .tickFormat(d => formatValue(+d, valueFormat));
+                .tickFormat(formatValue !== formatD3LargeNumber(1) && valueFormat ?
+                    d => formatValue(+d, valueFormat) :
+                    formatD3LargeNumber(1));
 
             legend.append('g')
                 .attr('transform', `translate(${legendWidth}, 0)`)

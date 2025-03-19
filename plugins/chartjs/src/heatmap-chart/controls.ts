@@ -1,6 +1,7 @@
 import { CommonDataset, DEFAULT_LIGHT_THEME, DEFAULT_DARK_THEME } from '../types';
 import { HeatmapChartConfig } from './types';
 import * as d3 from 'd3';
+import { formatLargeNumber } from '../utils';
 
 /**
  * Interface for heatmap data structure
@@ -174,4 +175,11 @@ export function getContrastColor(backgroundColor: string) {
         console.error('Error determining contrast color:', error);
         return 'black';
     }
+}
+
+// Add a utility function to leverage our formatLargeNumber in D3 context
+export function formatD3LargeNumber(decimals: number = 1) {
+    return (value: number | { valueOf(): number }) => {
+        return formatLargeNumber(+value, decimals);
+    };
 }

@@ -1,6 +1,7 @@
 import { ChartOptions } from 'chart.js';
 import { CommonDataset, DEFAULT_LIGHT_THEME, DEFAULT_DARK_THEME } from '../types';
 import { ScatterChartConfig } from './types';
+import { formatLargeNumber } from '../utils';
 
 /**
  * Prepare scatter chart data for rendering with Chart.js
@@ -48,13 +49,15 @@ export function prepareScatterChartData(data: CommonDataset, config: ScatterChar
             data: points,
             backgroundColor,
             borderColor: 'transparent', // Transparent borders
-            pointRadius: config.pointRadius || 5,
-            pointHoverRadius: (config.pointRadius || 5) + 2,
+            pointRadius: 10,
+            pointHoverRadius: 15,
         };
     });
 
     return {
-        datasets: chartJSDatasets
+        datasets: chartJSDatasets.map(dataset => ({
+            ...dataset,
+        }))
     };
 }
 
@@ -76,29 +79,45 @@ export function prepareScatterChartOptions(config: ScatterChartConfig, isDarkMod
         aspectRatio: config.aspectRatio || 1.5,
         scales: {
             x: {
-                title: {
-                    display: !!config.xAxisLabel,
-                    text: config.xAxisLabel || '',
-                    color: theme.textColor
-                },
                 ticks: {
-                    color: theme.textColor
+                    color: theme.textColor,
+                    callback: (value) => {
+                        if (typeof value === 'number') {
+                            return formatLargeNumber(value);
+                        }
+                        return value;
+                    },
+                    padding: 16
                 },
                 grid: {
                     color: theme.gridColor
+                },
+                border: {
+                    display: false, // Hide the axis border,
+                    dashOffset: 10,
+                    dash: [10],
+                    color: theme.gridColor,
                 }
             },
             y: {
-                title: {
-                    display: !!config.yAxisLabel,
-                    text: config.yAxisLabel || '',
-                    color: theme.textColor
-                },
                 ticks: {
-                    color: theme.textColor
+                    color: theme.textColor,
+                    callback: (value) => {
+                        if (typeof value === 'number') {
+                            return formatLargeNumber(value);
+                        }
+                        return value;
+                    },
+                    padding: 16
                 },
                 grid: {
                     color: theme.gridColor
+                },
+                border: {
+                    display: false, // Hide the axis border,
+                    dashOffset: 10,
+                    dash: [10],
+                    color: theme.gridColor,
                 }
             }
         },
