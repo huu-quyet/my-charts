@@ -11,7 +11,8 @@ import {
     HeatmapChartComponent,
     registerChartComponent,
     ChartType,
-    HorizontalBarChartComponent
+    HorizontalBarChartComponent,
+    BarLineChartComponent
 } from "@plugins/chartjs";
 
 export function registerPieChartPlugin() {
@@ -24,6 +25,10 @@ export function registerLineChartPlugin() {
 
 export function registerBarChartPlugin() {
     registerChartComponent(ChartType.BAR, BarChartComponent);
+}
+
+export function registerBarLineChartPlugin() {
+    registerChartComponent(ChartType.BAR_LINE, BarLineChartComponent);
 }
 
 export function registerRadarChartPlugin() {
@@ -55,7 +60,7 @@ export function registerHeatmapChartPlugin() {
 }
 
 export function registerHorizontalChartPlugin() {
-    registerChartComponent(ChartType.HEATMAP, HorizontalBarChartComponent);
+    registerChartComponent(ChartType.HORIZONTAL_BAR, HorizontalBarChartComponent);
 }
 
 // Register all chart components
@@ -63,6 +68,7 @@ export function registerAllChartPlugins() {
     registerPieChartPlugin();
     registerLineChartPlugin();
     registerBarChartPlugin();
+    registerBarLineChartPlugin();
     registerRadarChartPlugin();
     registerBubbleChartPlugin();
     registerPolarAreaChartPlugin();
@@ -70,5 +76,5 @@ export function registerAllChartPlugins() {
     registerDoughnutChartPlugin();
     registerStackChartPlugin();
     registerHeatmapChartPlugin();
-    registerHorizontalChartPlugin()
+    registerHorizontalChartPlugin();
 }

@@ -16,6 +16,7 @@
 export * from './pie-chart';
 export * from './line-chart';
 export * from './bar-chart';
+export * from './bar-line-chart';
 export * from './radar-chart';
 export * from './bubble-chart';
 export * from './polar-area-chart';
@@ -39,6 +40,7 @@ export { ChartType } from './types';
 export * from './pie-chart/controls';
 export * from './line-chart/controls';
 export * from './bar-chart/controls';
+export * from './bar-line-chart/controls';
 export * from './radar-chart/controls';
 export * from './bubble-chart/controls';
 export * from './polar-area-chart/controls';

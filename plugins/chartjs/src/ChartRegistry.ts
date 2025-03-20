@@ -1,11 +1,9 @@
-import { ChartType, ChartComponentRegistry, ChartComponentPropsMap } from './types';
-import React from 'react';
-
-// Import chart components (will be replaced with actual imports)
-import { PieChartComponent } from './pie-chart/PieChart';
-import { BarChartComponent } from './bar-chart/BarChart';
-import { LineChartComponent } from './line-chart/LineChart';
-import { RadarChartComponent } from './radar-chart/RadarChart';
+import { ChartComponentRegistry, ChartType } from './types';
+import { PieChartComponent } from './pie-chart';
+import { LineChartComponent } from './line-chart';
+import { BarChartComponent } from './bar-chart';
+import { BarLineChartComponent } from './bar-line-chart';
+import { RadarChartComponent } from './radar-chart';
 import { BubbleChartComponent } from './bubble-chart';
 import { PolarAreaChartComponent } from './polar-area-chart';
 import { ScatterChartComponent } from './scatter-chart';
@@ -16,59 +14,62 @@ import { FloatingChartComponent } from './floating-chart';
 import { HorizontalBarChartComponent } from './horizontal-bar-chart';
 
 /**
- * Registry of available chart components
- * This could be expanded with a registration system for plugins
+ * Initial registry of chart components available in the system
+ * Maps chart types to their React components
  */
 const chartComponents: ChartComponentRegistry = {
     [ChartType.PIE]: {
-        component: PieChartComponent as React.ComponentType<ChartComponentPropsMap['pie']>,
-        timestamp: Date.now()
-    },
-    [ChartType.BAR]: {
-        component: BarChartComponent as React.ComponentType<ChartComponentPropsMap['bar']>,
+        component: PieChartComponent,
         timestamp: Date.now()
     },
     [ChartType.LINE]: {
-        component: LineChartComponent as React.ComponentType<ChartComponentPropsMap['line']>,
+        component: LineChartComponent,
+        timestamp: Date.now()
+    },
+    [ChartType.BAR]: {
+        component: BarChartComponent,
+        timestamp: Date.now()
+    },
+    [ChartType.BAR_LINE]: {
+        component: BarLineChartComponent,
         timestamp: Date.now()
     },
     [ChartType.RADAR]: {
-        component: RadarChartComponent as React.ComponentType<ChartComponentPropsMap['radar']>,
+        component: RadarChartComponent,
         timestamp: Date.now()
     },
     [ChartType.BUBBLE]: {
-        component: BubbleChartComponent as React.ComponentType<ChartComponentPropsMap['bubble']>,
+        component: BubbleChartComponent,
         timestamp: Date.now()
     },
     [ChartType.POLAR_AREA]: {
-        component: PolarAreaChartComponent as React.ComponentType<ChartComponentPropsMap['polarArea']>,
+        component: PolarAreaChartComponent,
         timestamp: Date.now()
     },
     [ChartType.SCATTER]: {
-        component: ScatterChartComponent as React.ComponentType<ChartComponentPropsMap['scatter']>,
+        component: ScatterChartComponent,
         timestamp: Date.now()
     },
     [ChartType.DOUGHNUT]: {
-        component: DoughnutChartComponent as React.ComponentType<ChartComponentPropsMap['doughnut']>,
+        component: DoughnutChartComponent,
         timestamp: Date.now()
     },
     [ChartType.STACK]: {
-        component: StackChartComponent as React.ComponentType<ChartComponentPropsMap['stack']>,
+        component: StackChartComponent,
         timestamp: Date.now()
     },
     [ChartType.HEATMAP]: {
-        component: HeatmapChartComponent as React.ComponentType<ChartComponentPropsMap['heatmap']>,
+        component: HeatmapChartComponent,
         timestamp: Date.now()
     },
     [ChartType.FLOATING]: {
-        component: FloatingChartComponent as React.ComponentType<ChartComponentPropsMap['floating']>,
+        component: FloatingChartComponent,
         timestamp: Date.now()
     },
     [ChartType.HORIZONTAL_BAR]: {
-        component: HorizontalBarChartComponent as React.ComponentType<ChartComponentPropsMap['horizontal-bar']>,
+        component: HorizontalBarChartComponent,
         timestamp: Date.now()
     }
-    // Additional chart types can be registered here
 };
 
 export default chartComponents;

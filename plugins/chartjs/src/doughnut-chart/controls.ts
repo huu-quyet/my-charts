@@ -29,7 +29,7 @@ export function prepareDoughnutChartData(data: CommonDataset, isDarkMode: boolea
             data: values,
             backgroundColor,
             borderColor,
-            borderWidth: 0  // Set border width to 0 to remove borders
+            borderWidth: 0, // Set border width to 0 to remove borders
         }]
     };
 }

@@ -187,6 +187,7 @@ export type ChartComponentProps =
     | import('./pie-chart/types').PieChartProps
     | import('./bar-chart/types').BarChartProps
     | import('./line-chart/types').LineChartProps
+    | import('./bar-line-chart/types').BarLineChartProps
     | import('./radar-chart/types').RadarChartProps
     | import('./bubble-chart/types').BubbleChartProps
     | import('./polar-area-chart/types').PolarAreaChartProps
@@ -196,7 +197,6 @@ export type ChartComponentProps =
     | import('./heatmap-chart/types').HeatmapChartProps
     | import('./floating-chart/types').FloatingChartProps
     | import('./horizontal-bar-chart/types').HorizontalBarChartProps;
-
 
 /**
  * Enumeration of all available chart types
@@ -209,6 +209,8 @@ export enum ChartType {
     LINE = 'line',
     /** Bar chart for comparing discrete categories */
     BAR = 'bar',
+    /** Bar-Line combination chart for comparing different data types */
+    BAR_LINE = 'bar-line',
     /** Radar chart for comparing multiple variables */
     RADAR = 'radar',
     /** Bubble chart for showing relationships between 3 variables */
@@ -237,6 +239,7 @@ export type ChartComponentPropsMap = {
     [ChartType.PIE]: import('./pie-chart/types').PieChartProps;
     [ChartType.LINE]: import('./line-chart/types').LineChartProps;
     [ChartType.BAR]: import('./bar-chart/types').BarChartProps;
+    [ChartType.BAR_LINE]: import('./bar-line-chart/types').BarLineChartProps;
     [ChartType.RADAR]: import('./radar-chart/types').RadarChartProps;
     [ChartType.BUBBLE]: import('./bubble-chart/types').BubbleChartProps;
     [ChartType.POLAR_AREA]: import('./polar-area-chart/types').PolarAreaChartProps;

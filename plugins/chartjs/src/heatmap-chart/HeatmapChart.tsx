@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
-import { prepareHeatmapData, createColorScale, formatValue, getContrastColor, formatD3LargeNumber } from './controls';
+import { prepareHeatmapData, createColorScale, formatValue, getContrastColor } from './controls';
 import { isDarkMode as checkDarkMode } from '../utils';
 import '../assets/css/heatmap-chart.css';
 import { HeatmapChartProps } from './types';
@@ -27,14 +27,14 @@ export const HeatmapChartComponent: React.FC<HeatmapChartProps> = ({
         cellPadding = 2,
         cellBorderWidth = 0,
         cellBorderColor = 'white',
-        cellRadius = 0,
+        cellRadius = 4,
         showValues = true,
         valueFormat = '',
         valueFontSize = '12px',
         valueColor = 'auto',
         animationDuration = 500,
         showColorLegend = true,
-        colorLegendTicks = 5,
+        // colorLegendTicks = 5,
     } = config;
 
     // Effect to handle initial render and updates
@@ -57,10 +57,10 @@ export const HeatmapChartComponent: React.FC<HeatmapChartProps> = ({
 
         // Define margins for axes
         const margin = {
-            top: 50,
-            right: showColorLegend ? 120 : 40,
-            bottom: 120,
-            left: 120
+            top: 20,
+            right: showColorLegend ? 120 : 20,
+            bottom: 68,
+            left: 68
         };
 
         // Calculate the available width and height for the chart
@@ -71,12 +71,12 @@ export const HeatmapChartComponent: React.FC<HeatmapChartProps> = ({
         const xScale = d3.scaleBand()
             .domain(xLabels as string[])
             .range([0, innerWidth])
-            .padding(0);
+            .padding(0.1); // Added padding between bands
 
         const yScale = d3.scaleBand()
             .domain(yLabels as string[])
             .range([0, innerHeight])
-            .padding(0);
+            .padding(0.1); // Added padding between bands
 
         // Create the chart group with margins
         const chart = svg.append('g')
@@ -99,28 +99,28 @@ export const HeatmapChartComponent: React.FC<HeatmapChartProps> = ({
             .style('fill', isDarkMode ? '#eaeaea' : '#333')
             .style('font-size', '12px');
 
-        // Add x-axis label
-        if (config.xAxisLabel) {
-            chart.append('text')
-                .attr('class', 'x-axis-label')
-                .attr('x', innerWidth / 2)
-                .attr('y', innerHeight + margin.bottom / 2)
-                .style('text-anchor', 'middle')
-                .style('fill', isDarkMode ? '#eaeaea' : '#333')
-                .text(config.xAxisLabel);
-        }
+        // // Add x-axis label
+        // if (config.xAxisLabel) {
+        //     chart.append('text')
+        //         .attr('class', 'x-axis-label')
+        //         .attr('x', innerWidth / 2)
+        //         .attr('y', innerHeight + margin.bottom / 2)
+        //         .style('text-anchor', 'middle')
+        //         .style('fill', isDarkMode ? '#eaeaea' : '#333')
+        //         .text(config.xAxisLabel);
+        // }
 
-        // Add y-axis label
-        if (config.yAxisLabel) {
-            chart.append('text')
-                .attr('class', 'y-axis-label')
-                .attr('transform', 'rotate(-90)')
-                .attr('x', -innerHeight / 2)
-                .attr('y', -margin.left / 1.5)
-                .style('text-anchor', 'middle')
-                .style('fill', isDarkMode ? '#eaeaea' : '#333')
-                .text(config.yAxisLabel);
-        }
+        // // Add y-axis label
+        // if (config.yAxisLabel) {
+        //     chart.append('text')
+        //         .attr('class', 'y-axis-label')
+        //         .attr('transform', 'rotate(-90)')
+        //         .attr('x', -innerHeight / 2)
+        //         .attr('y', -margin.left / 1.5)
+        //         .style('text-anchor', 'middle')
+        //         .style('fill', isDarkMode ? '#eaeaea' : '#333')
+        //         .text(config.yAxisLabel);
+        // }
 
         // Create tooltip
         const tooltip = d3.select('body').append('div')
@@ -149,10 +149,21 @@ export const HeatmapChartComponent: React.FC<HeatmapChartProps> = ({
                 // Highlight cell
                 d3.select(this)
                     .style('stroke', isDarkMode ? 'white' : 'black')
-                    .style('stroke-width', 2);
+                    .style('stroke-width', 2)
+                    .style('cursor', 'pointer');
 
                 // Show tooltip
-                const formattedValue = formatValue(d.value, valueFormat);
+                let formattedValue;
+                if (d.value >= 1000000000) {
+                    formattedValue = (d.value / 1000000000).toFixed(1) + 'B';
+                } else if (d.value >= 1000000) {
+                    formattedValue = (d.value / 1000000).toFixed(1) + 'M';
+                } else if (d.value >= 1000) {
+                    formattedValue = (d.value / 1000).toFixed(1) + 'K';
+                } else {
+                    formattedValue = formatValue(d.value, valueFormat);
+                }
+
                 const tooltipContent = config.tooltipTemplate ?
                     config.tooltipTemplate(d, cells.indexOf(d)) :
                     `${d.x}, ${d.y}: ${formattedValue}`;
@@ -194,7 +205,35 @@ export const HeatmapChartComponent: React.FC<HeatmapChartProps> = ({
                     return valueColor;
                 })
                 .style('opacity', 0) // Start with opacity 0
-                .text(d => formatValue(d.value, valueFormat))
+                .style('pointer-events', 'none')  // Prevent text from interfering with cell hover
+                .text(d => {
+                    const value = d.value;
+                    // Don't display if value is 0
+                    if (value === 0 || value === null || value === undefined) {
+                        return '';
+                    }
+
+                    let formattedValue;
+                    if (value >= 1000000000) {
+                        formattedValue = (value / 1000000000).toFixed(1) + 'B';
+                    } else if (value >= 1000000) {
+                        formattedValue = (value / 1000000).toFixed(1) + 'M';
+                    } else if (value >= 1000) {
+                        formattedValue = (value / 1000).toFixed(1) + 'K';
+                    } else {
+                        formattedValue = formatValue(value, valueFormat);
+                    }
+
+                    const maxWidth = xScale.bandwidth() - 4; // Leave 2px padding on each side
+                    const truncate = (text: string) => {
+                        if (text.length * 8 > maxWidth) { // Approximate character width of 8px
+                            return text.substring(0, Math.floor(maxWidth / 8)) + '...';
+                        }
+                        return text;
+                    };
+
+                    return truncate(formattedValue);
+                })
                 .transition()
                 .delay(animationDuration / 2)
                 .duration(animationDuration)
@@ -202,68 +241,68 @@ export const HeatmapChartComponent: React.FC<HeatmapChartProps> = ({
         }
 
         // Add color legend if enabled
-        if (showColorLegend) {
-            const legendWidth = 30;
-            const legendHeight = innerHeight;
-            const legendX = innerWidth + 40;
+        // if (showColorLegend) {
+        //     const legendWidth = 30;
+        //     const legendHeight = innerHeight;
+        //     const legendX = innerWidth + 40;
 
-            // Create gradient for legend
-            const defs = svg.append('defs');
-            const gradient = defs.append('linearGradient')
-                .attr('id', 'heatmap-gradient')
-                .attr('gradientUnits', 'userSpaceOnUse')
-                .attr('x1', 0)
-                .attr('y1', legendHeight)
-                .attr('x2', 0)
-                .attr('y2', 0);
+        //     // Create gradient for legend
+        //     const defs = svg.append('defs');
+        //     const gradient = defs.append('linearGradient')
+        //         .attr('id', 'heatmap-gradient')
+        //         .attr('gradientUnits', 'userSpaceOnUse')
+        //         .attr('x1', 0)
+        //         .attr('y1', legendHeight)
+        //         .attr('x2', 0)
+        //         .attr('y2', 0);
 
-            // Add color stops
-            const colorRange = colorScale.range();
-            const numStops = colorRange.length;
+        //     // Add color stops
+        //     const colorRange = colorScale.range();
+        //     const numStops = colorRange.length;
 
-            for (let i = 0; i < numStops; i++) {
-                gradient.append('stop')
-                    .attr('offset', `${i / (numStops - 1) * 100}%`)
-                    .attr('stop-color', colorRange[i]);
-            }
+        //     for (let i = 0; i < numStops; i++) {
+        //         gradient.append('stop')
+        //             .attr('offset', `${i / (numStops - 1) * 100}%`)
+        //             .attr('stop-color', colorRange[i]);
+        //     }
 
-            // Add gradient rectangle
-            const legend = svg.append('g')
-                .attr('class', 'legend')
-                .attr('transform', `translate(${margin.left + legendX}, ${margin.top})`);
+        //     // Add gradient rectangle
+        //     const legend = svg.append('g')
+        //         .attr('class', 'legend')
+        //         .attr('transform', `translate(${margin.left + legendX}, ${margin.top})`);
 
-            legend.append('rect')
-                .attr('width', legendWidth)
-                .attr('height', legendHeight)
-                .style('fill', 'url(#heatmap-gradient)');
+        //     legend.append('rect')
+        //         .attr('width', legendWidth)
+        //         .attr('height', legendHeight)
+        //         .style('fill', 'url(#heatmap-gradient)');
 
-            // Add legend axis
-            const legendScale = d3.scaleLinear()
-                .domain([minValue, maxValue])
-                .range([legendHeight, 0]);
+        //     // Add legend axis
+        //     const legendScale = d3.scaleLinear()
+        //         .domain([minValue, maxValue])
+        //         .range([legendHeight, 0]);
 
-            const legendAxis = d3.axisRight(legendScale)
-                .ticks(colorLegendTicks)
-                .tickFormat(formatValue !== formatD3LargeNumber(1) && valueFormat ?
-                    d => formatValue(+d, valueFormat) :
-                    formatD3LargeNumber(1));
+        //     const legendAxis = d3.axisRight(legendScale)
+        //         .ticks(colorLegendTicks)
+        //         .tickFormat(formatValue !== formatD3LargeNumber(1) && valueFormat ?
+        //             d => formatValue(+d, valueFormat) :
+        //             formatD3LargeNumber(1));
 
-            legend.append('g')
-                .attr('transform', `translate(${legendWidth}, 0)`)
-                .call(legendAxis)
-                .selectAll('text')
-                .style('fill', isDarkMode ? '#eaeaea' : '#333')
-                .style('font-size', '12px');
+        //     legend.append('g')
+        //         .attr('transform', `translate(${legendWidth}, 0)`)
+        //         .call(legendAxis)
+        //         .selectAll('text')
+        //         .style('fill', isDarkMode ? '#eaeaea' : '#333')
+        //         .style('font-size', '12px');
 
-            // Add legend title
-            legend.append('text')
-                .attr('class', 'legend-title')
-                .attr('x', legendWidth / 2)
-                .attr('y', -15)
-                .style('text-anchor', 'middle')
-                .style('fill', isDarkMode ? '#eaeaea' : '#333')
-                .text('Value');
-        }
+        //     // Add legend title
+        //     legend.append('text')
+        //         .attr('class', 'legend-title')
+        //         .attr('x', legendWidth / 2)
+        //         .attr('y', -15)
+        //         .style('text-anchor', 'middle')
+        //         .style('fill', isDarkMode ? '#eaeaea' : '#333')
+        //         .text('Value');
+        // }
 
         // Add chart title if provided
         if (config.title) {
@@ -282,7 +321,21 @@ export const HeatmapChartComponent: React.FC<HeatmapChartProps> = ({
         return () => {
             tooltip.remove();
         };
-    }, [data, config, isDarkMode]);
+    }, [
+        data,
+        config,
+        isDarkMode,
+        animationDuration,
+        cellBorderColor,
+        cellBorderWidth,
+        cellPadding,
+        cellRadius,
+        showColorLegend,
+        showValues,
+        valueColor,
+        valueFontSize,
+        valueFormat
+    ]);
 
     return (
         <div className={`heatmap-chart-container ${isDarkMode ? 'dark-mode' : ''}`}>

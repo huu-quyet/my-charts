@@ -64,6 +64,24 @@ function App() {
     ]
   }
 
+  // Bar-Line chart dataset
+  const barLineDataset: CommonDataset = {
+    items: [
+      { label: "Jan", value: 45000, category: "Revenue" },
+      { label: "Feb", value: 52000, category: "Revenue" },
+      { label: "Mar", value: 61000, category: "Revenue" },
+      { label: "Apr", value: 58000, category: "Revenue" },
+      { label: "May", value: 63000, category: "Revenue" },
+      { label: "Jun", value: 69000, category: "Revenue" },
+      { label: "Jan", value: 12, category: "Growth %" },
+      { label: "Feb", value: 15, category: "Growth %" },
+      { label: "Mar", value: 18, category: "Growth %" },
+      { label: "Apr", value: -5, category: "Growth %" },
+      { label: "May", value: 8, category: "Growth %" },
+      { label: "Jun", value: 10, category: "Growth %" },
+    ]
+  };
+
   // Radar dataset
   const radarDataset: CommonDataset = {
     items: [
@@ -135,15 +153,15 @@ function App() {
   // Heatmap dataset
   const heatmapDataset: CommonDataset = {
     items: [
-      { label: "Item A", value: 10, category: "Category 1" },
-      { label: "Item B", value: 20, category: "Category 1" },
-      { label: "Item C", value: 30, category: "Category 1" },
-      { label: "Item D", value: 40, category: "Category 1" },
-      { label: "Item A", value: 50, category: "Category 2" },
-      { label: "Item B", value: 60, category: "Category 2" },
-      { label: "Item C", value: 70, category: "Category 2" },
-      { label: "Item D", value: 80, category: "Category 2" },
-      { label: "Item A", value: 90, category: "Category 3" },
+      { label: "Item A", value: 1000, category: "Category 1" },
+      { label: "Item B", value: 2000, category: "Category 1" },
+      { label: "Item C", value: 3000, category: "Category 1" },
+      { label: "Item D", value: 4000, category: "Category 1" },
+      { label: "Item A", value: 5000, category: "Category 2" },
+      { label: "Item B", value: 6000, category: "Category 2" },
+      { label: "Item C", value: 7000, category: "Category 2" },
+      { label: "Item D", value: 8000, category: "Category 2" },
+      { label: "Item A", value: 900, category: "Category 3" },
       { label: "Item B", value: 100, category: "Category 3" },
       { label: "Item C", value: 45, category: "Category 3" },
       { label: "Item D", value: 25, category: "Category 3" },
@@ -211,6 +229,31 @@ function App() {
               xAxisLabel: 'Year',
               yAxisLabel: 'Value',
               borderRadius: 4,
+            }}
+          />
+        </div>
+
+        <div className="chart-demo">
+          <h2>Bar-Line Chart</h2>
+          <DynamicChart
+            chartType={ChartType.BAR_LINE}
+            metadata={{
+              title: "Revenue & Growth Chart",
+              description: "Showing monthly revenue amounts with growth percentage"
+            }}
+            data={barLineDataset}
+            config={{
+              title: 'Monthly Revenue & Growth',
+              barCategories: ['Revenue'],
+              lineCategories: ['Growth %'],
+              useDualAxes: true,
+              xAxisLabel: 'Month',
+              yAxisLabel: 'Revenue ($)',
+              rightYAxisLabel: 'Growth (%)',
+              showLegend: true,
+              showPoints: true,
+              borderRadius: 6,
+              lineTension: 0.4
             }}
           />
         </div>
@@ -344,18 +387,6 @@ function App() {
             chartType={ChartType.HEATMAP}
             metadata={chartMetadata}
             data={heatmapDataset}
-            config={{
-              title: 'Value Distribution Matrix',
-              xAxisLabel: 'Categories',
-              yAxisLabel: 'Items',
-              showValues: true,
-              showColorLegend: true,
-              valueFormat: '.0f',
-              cellPadding: 4,
-              cellRadius: 2,
-              animationDuration: 800,
-              colorInterpolation: 'hsl'
-            }}
           />
         </div>
 

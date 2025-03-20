@@ -18,6 +18,7 @@ This plugin provides a comprehensive set of chart components built on top of Cha
 - **Pie Chart**: For part-to-whole relationships
 - **Bar Chart**: For comparing categories
 - **Line Chart**: For showing trends over time
+- **Bar-Line Chart**: For combining bar and line visualizations in a single chart
 - **Radar Chart**: For comparing multiple variables
 - **Bubble Chart**: For three-dimensional data (x, y, size)
 - **Polar Area Chart**: For polar coordinate visualization
@@ -74,6 +75,57 @@ function MyChart() {
             }}
         />
     );
+}
+```
+
+## Bar-Line Chart
+
+The Bar-Line chart combines bar and line elements in a single visualization, allowing for effective comparison of different types of related data.
+
+### Features
+
+- Configurable categories for bar and line representation
+- Optional dual y-axes for different scales of data
+- Customizable styling for both bar and line elements
+- Interactive tooltips for data exploration
+
+### Example Usage
+
+```typescript
+import { BarLineChartComponent, ChartType } from '@plugins/chartjs';
+
+// Sample data
+const data = {
+  items: [
+    { label: "Jan", value: 100, category: "Revenue" },
+    { label: "Feb", value: 120, category: "Revenue" },
+    { label: "Mar", value: 140, category: "Revenue" },
+    { label: "Jan", value: 20, category: "Growth Rate" },
+    { label: "Feb", value: 22, category: "Growth Rate" },
+    { label: "Mar", value: 25, category: "Growth Rate" }
+  ]
+};
+
+// Sample component
+function MyBarLineChart() {
+  return (
+    <BarLineChartComponent
+      metadata={{
+        title: "Revenue and Growth Rate",
+        description: "Monthly revenue with corresponding growth rates"
+      }}
+      data={data}
+      config={{
+        barCategories: ["Revenue"],
+        lineCategories: ["Growth Rate"],
+        useDualAxes: true,
+        yAxisLabel: "Revenue ($)",
+        rightYAxisLabel: "Growth (%)",
+        showLegend: true,
+        showPoints: true
+      }}
+    />
+  );
 }
 ```
 

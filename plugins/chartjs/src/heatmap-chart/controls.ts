@@ -79,12 +79,12 @@ export function prepareHeatmapData(data: CommonDataset) {
                 cells.push({
                     x: String(x),
                     y: String(y),
-                    value: 0
+                    value: cell.value,
                 });
                 cells.push({
                     x: String(x),
                     y: String(y),
-                    value: 0
+                    value: cell.value,
                 });
             }
         });

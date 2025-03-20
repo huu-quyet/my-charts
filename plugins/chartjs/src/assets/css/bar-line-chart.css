@@ -1,0 +1,33 @@
+.bar-line-chart-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-wrapper.bar-line-chart {
+  position: relative;
+  flex-grow: 1;
+}
+
+.chart-title {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  text-align: left;
+}
+
+.chart-description {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: #666;
+  text-align: left;
+}
+
+/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+  .chart-description {
+    color: #aaa;
+  }
+}
