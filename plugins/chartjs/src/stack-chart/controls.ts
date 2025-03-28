@@ -116,12 +116,7 @@ export function prepareStackChartOptions(config: StackChartConfig, isDarkMode: b
                 },
                 ticks: {
                     color: theme.textColor,
-                    callback: (value) => {
-                        if (config.horizontal && typeof value === 'number' && !config.percentage) {
-                            return formatLargeNumber(value);
-                        }
-                        return value;
-                    }
+                    padding: 16,
                 },
                 grid: {
                     display: false, // Hide only the grid lines

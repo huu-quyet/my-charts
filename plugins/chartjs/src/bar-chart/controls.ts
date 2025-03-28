@@ -53,6 +53,12 @@ export function prepareBarChartData(data: CommonDataset, config: BarChartConfig,
         };
     });
 
+    console.log('Bar chart data:', {
+        labels: sortedLabels,
+        datasets: chartJSDatasets
+    });
+
+
     return {
         labels: sortedLabels,
         datasets: chartJSDatasets
@@ -84,14 +90,7 @@ export function prepareBarChartOptions(config: BarChartConfig, isDarkMode: boole
                 },
                 ticks: {
                     color: theme.textColor,
-                    display: true, // Keep the values visible
-                    callback: (value) => {
-                        // For horizontal bar charts, x-axis typically has values
-                        if (config.horizontal && typeof value === 'number') {
-                            return formatLargeNumber(value);
-                        }
-                        return value;
-                    }
+                    padding: 16,
                 },
                 grid: {
                     display: false // Hide only the grid lines

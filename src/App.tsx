@@ -56,11 +56,11 @@ function App() {
       { label: "2021", value: 50, category: "Sales" },
       { label: "2022", value: 63, category: "Sales" },
       { label: "2023", value: 58, category: "Sales" },
-      { label: "2019", value: 35, category: "Expenses" },
-      { label: "2020", value: 37, category: "Expenses" },
-      { label: "2021", value: 42, category: "Expenses" },
-      { label: "2022", value: 53, category: "Expenses" },
-      { label: "2023", value: 47, category: "Expenses" },
+      // { label: "2019", value: 35, category: "Expenses" },
+      // { label: "2020", value: 37, category: "Expenses" },
+      // { label: "2021", value: 42, category: "Expenses" },
+      // { label: "2022", value: 53, category: "Expenses" },
+      // { label: "2023", value: 47, category: "Expenses" },
     ]
   }
 
