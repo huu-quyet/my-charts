@@ -35,7 +35,7 @@ export function prepareStackChartData(data: CommonDataset, config: StackChartCon
 
     // Create Chart.js datasets
     const chartJSDatasets = Array.from(dataByCategory.entries()).map(([category, values], index) => {
-        const backgroundColor = theme.backgroundColor[index % theme.backgroundColor.length];
+        const backgroundColor = theme.getBackgroundColor(index);
 
         // For percentage charts, convert values to percentages for each label
         let data = sortedLabels.map(label => values.get(label) || 0);
@@ -62,11 +62,18 @@ export function prepareStackChartData(data: CommonDataset, config: StackChartCon
             backgroundColor,
             borderColor: backgroundColor, // Same as background color
             borderWidth: 0, // No borders
-            borderRadius: 16,
+            borderRadius: index === 0 ? {
+                bottomLeft: 4,
+                bottomRight: 4
+            } : (index === dataByCategory.size - 1 ? {
+                topLeft: 4,
+                topRight: 4
+            } : 0),
             barPercentage: 0.9,
             categoryPercentage: 0.9,
+            borderSkipped: false,
             // Bar width configuration
-            maxBarThickness: 50,     // Maximum width if specified
+            maxBarThickness: 42,     // Maximum width if specified
         };
     });
 

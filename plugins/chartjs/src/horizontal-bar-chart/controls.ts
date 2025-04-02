@@ -36,7 +36,7 @@ export function prepareHorizontalBarChartData(data: CommonDataset, config: Horiz
 
     // Create Chart.js datasets
     const chartJSDatasets = Array.from(dataByCategory.entries()).map(([category, values], index) => {
-        const backgroundColor = theme.backgroundColor[index % theme.backgroundColor.length];
+        const backgroundColor = theme.getBackgroundColor(index);
 
         return {
             label: category,
@@ -44,7 +44,7 @@ export function prepareHorizontalBarChartData(data: CommonDataset, config: Horiz
             backgroundColor,
             borderColor: backgroundColor, // Same as background color
             borderWidth: 0, // No borders
-            borderRadius: 8,
+            borderRadius: 4,
             barPercentage: 0.8,
             // Bar width configuration
             maxBarThickness: 42,     // Maximum width if specified

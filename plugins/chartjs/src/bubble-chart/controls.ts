@@ -50,7 +50,7 @@ export function prepareBubbleChartData(data: CommonDataset, config: BubbleChartC
 
     // Create Chart.js datasets
     const chartJSDatasets = Array.from(dataByCategory.entries()).map(([category, points], index) => {
-        const backgroundColor = theme.backgroundColor[index % theme.backgroundColor.length];
+        const backgroundColor = theme.getBackgroundColor(index);
 
         return {
             label: category,

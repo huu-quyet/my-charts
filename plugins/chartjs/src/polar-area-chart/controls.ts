@@ -17,7 +17,7 @@ export function preparePolarAreaChartData(data: CommonDataset, isDarkMode: boole
     const labels = data.items.map(item => item.label);
     const values = data.items.map(item => item.value);
     const backgroundColor = data.items.map((item, index) =>
-        item.color || theme.backgroundColor[index % theme.backgroundColor.length]);
+        item.color || theme.getBackgroundColor(index));
 
     return {
         labels,
@@ -63,7 +63,7 @@ export function preparePolarAreaChartOptions(config: PolarAreaChartConfig, isDar
         },
         plugins: {
             legend: {
-                display: config.showLegend !== false,
+                display: false,
                 position: 'top' as const,
                 labels: {
                     color: theme.legendTextColor,
@@ -82,7 +82,7 @@ export function preparePolarAreaChartOptions(config: PolarAreaChartConfig, isDar
                 },
             },
             title: {
-                display: !!config.title,
+                display: false,
                 text: config.title || '',
                 color: theme.textColor,
                 font: {

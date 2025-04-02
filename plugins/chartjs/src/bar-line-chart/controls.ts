@@ -59,7 +59,7 @@ export function prepareBarLineChartData(data: CommonDataset, config: BarLineChar
     // Create bar datasets
     barCategories.forEach((category, index) => {
         const values = dataByCategory.get(category) || new Map<string, number>();
-        const backgroundColor = theme.backgroundColor[index % theme.backgroundColor.length];
+        const backgroundColor = theme.getBackgroundColor(index);
 
         chartJSDatasets.push({
             type: 'bar',
@@ -68,11 +68,12 @@ export function prepareBarLineChartData(data: CommonDataset, config: BarLineChar
             backgroundColor,
             borderColor: backgroundColor,
             borderWidth: 0,
-            borderRadius: config.borderRadius || 4,
+            borderRadius: 4,
             barPercentage: 0.8,
             categoryPercentage: 0.8,
             yAxisID: 'y',
             order: 1, // Bars appear behind lines
+            borderSkipped: false,
             maxBarThickness: 42, // Maximum width if specified
         });
     });
@@ -82,7 +83,7 @@ export function prepareBarLineChartData(data: CommonDataset, config: BarLineChar
         const values = dataByCategory.get(category) || new Map<string, number>();
         // Use a different section of the color palette for lines
         const colorIndex = (index + Math.max(barCategories.length, 3)) % theme.backgroundColor.length;
-        const backgroundColor = theme.backgroundColor[colorIndex];
+        const backgroundColor = theme.getBackgroundColor(colorIndex);
 
         const borderColor = backgroundColor.replace(/rgba\((\d+,\s*\d+,\s*\d+),\s*0\.8\)/, 'rgba($1, 1)');
 

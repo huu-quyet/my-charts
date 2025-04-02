@@ -89,7 +89,7 @@ export function prepareDoughnutChartOptions(config: DoughnutChartConfig, isDarkM
         plugins: {
             doughnutCenterText: centerTextPlugin,
             legend: {
-                display: config.showLegend !== false,
+                display: false,
                 position: 'top' as const,
                 labels: {
                     color: theme.legendTextColor,
@@ -108,7 +108,7 @@ export function prepareDoughnutChartOptions(config: DoughnutChartConfig, isDarkM
                 },
             },
             title: {
-                display: !!config.title,
+                display: false,
                 text: config.title || '',
                 color: theme.textColor,
                 font: {

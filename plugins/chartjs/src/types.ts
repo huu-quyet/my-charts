@@ -108,6 +108,10 @@ export interface ChartTheme {
     textColor: string;
     /** Color for legend text */
     legendTextColor: string;
+    /** Function to get a background color by index (for infinite colors) */
+    getBackgroundColor: (index: number) => string;
+    /** Function to get a border color by index (for infinite colors) */
+    getBorderColor: (index: number) => string;
 }
 
 /**
@@ -116,32 +120,85 @@ export interface ChartTheme {
  */
 export const DEFAULT_LIGHT_THEME: ChartTheme = {
     backgroundColor: [
+        'rgba(0, 180, 216, 0.8)',   // #00B4D8
+        'rgba(26, 78, 179, 0.8)',   // #1A4EB3
+        'rgba(54, 150, 251, 0.8)',  // #3696FB
+        'rgba(23, 92, 211, 0.8)',   // #175CD3
+        'rgba(92, 182, 254, 0.8)',  // #5CB6FE
+        'rgba(144, 209, 255, 0.8)', // #90D1FF
+        'rgba(6, 80, 134, 0.8)',    // #065086
         'rgba(75, 192, 192, 0.8)',
-        'rgba(54, 162, 235, 0.8)',
-        'rgba(2,62,138, 0.8)',
-        'rgba(0,150,199, 0.8)',
-        'rgba(23,92,211,0.8)',
-        'rgba(3,4,94, 0.8)',
-        'rgba(0,119,182, 0.8)',
-        'rgba(56,175,250, 0.8)',
-        'rgba(239,248,255, 0.8)',
-        'rgba(199, 199, 199, 0.8)',
+        'rgba(0, 162, 208, 0.8)',
+        'rgba(40, 125, 125, 0.8)',
     ],
     borderColor: [
-        'rgba(229,231,235,1)',
-        'rgba(229,231,235,1)',
-        'rgba(229,231,235,1)',
-        'rgba(229,231,235,1)',
-        'rgba(229,231,235,1)',
-        'rgba(229,231,235,1)',
-        'rgba(229,231,235,1)',
-        'rgba(229,231,235,1)',
-        'rgba(229,231,235,1)',
-        'rgba(229,231,235,1)',
+        'rgba(0, 180, 216, 1)',     // #00B4D8
+        'rgba(26, 78, 179, 1)',     // #1A4EB3
+        'rgba(54, 150, 251, 1)',    // #3696FB
+        'rgba(23, 92, 211, 1)',     // #175CD3
+        'rgba(92, 182, 254, 1)',    // #5CB6FE
+        'rgba(144, 209, 255, 1)',   // #90D1FF
+        'rgba(6, 80, 134, 1)',      // #065086
+        'rgba(75, 192, 192, 1)',
+        'rgba(0, 162, 208, 1)',
+        'rgba(40, 125, 125, 1)',
     ],
     gridColor: 'rgba(0, 0, 0, 0.1)',
     textColor: 'rgba(0, 0, 0, 0.87)',
     legendTextColor: 'rgba(0, 0, 0, 0.87)',
+    // Generate colors dynamically to avoid repetition
+    getBackgroundColor: (index: number) => {
+        const baseColors = DEFAULT_LIGHT_THEME.backgroundColor;
+        if (index < baseColors.length) {
+            return baseColors[index];
+        }
+
+        // Generate colors in the blue range (180-240 degrees in HSL)
+        // Use golden ratio for better distribution of colors
+        const blueBaseHue = 210; // Center of blue range
+        const variance = 30;     // +/- variation from the center
+        const hue = (blueBaseHue - variance) + ((index * 137.508) % (variance * 2));
+        const h = hue / 360;
+        const s = 0.7 + (index % 3) * 0.1; // Vary saturation slightly
+        const l = 0.55 + (index % 5) * 0.05; // Vary lightness slightly
+
+        // HSL to RGB conversion algorithm
+        const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        const p = 2 * l - q;
+
+        const r = Math.round(hslToRgb(p, q, h + 1 / 3) * 255);
+        const g = Math.round(hslToRgb(p, q, h) * 255);
+        const b = Math.round(hslToRgb(p, q, h - 1 / 3) * 255);
+
+        return `rgba(${r}, ${g}, ${b}, 0.8)`;
+    },
+    getBorderColor: (index: number) => {
+        // First check if we have this index in the base colors
+        const baseColors = DEFAULT_LIGHT_THEME.backgroundColor;
+        if (index < baseColors.length) {
+            // Extract RGB from background color and return with 1.0 opacity
+            const bgColor = baseColors[index];
+            return bgColor.replace(/rgba\((\d+),\s*(\d+),\s*(\d+).*/, 'rgba($1, $2, $3, 1)');
+        }
+
+        // Generate colors in the blue range (180-240 degrees in HSL)
+        // Use golden ratio for better distribution of colors
+        const blueBaseHue = 210; // Center of blue range
+        const variance = 30;     // +/- variation from the center
+        const hue = (blueBaseHue - variance) + ((index * 137.508) % (variance * 2));
+        const h = hue / 360;
+        const s = 0.8; // Higher saturation for vibrant blue colors
+        const l = 0.65; // Same lightness as background for color consistency
+
+        const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        const p = 2 * l - q;
+
+        const r = Math.round(hslToRgb(p, q, h + 1 / 3) * 255);
+        const g = Math.round(hslToRgb(p, q, h) * 255);
+        const b = Math.round(hslToRgb(p, q, h - 1 / 3) * 255);
+
+        return `rgba(${r}, ${g}, ${b}, 1)`;
+    }
 };
 
 /**
@@ -151,33 +208,94 @@ export const DEFAULT_LIGHT_THEME: ChartTheme = {
  */
 export const DEFAULT_DARK_THEME: ChartTheme = {
     backgroundColor: [
-        'rgba(75,121,198, 0.8)',
-        'rgba(85,122,204,0.8)',
-        'rgba(81,166,220,0.8)',
-        'rgba(78,168,203,0.8)',
-        'rgba(83,168,163,0.8)',
-        'rgba(98,101,121,1)',
-        'rgba(140,140,140,0.8)',
-        'rgba(101,113,209,0.8)',
-        'rgba(80,165,125,0.8)',
-        'rgba(209,87,95,0.8)',
+        'rgba(54, 162, 235, 0.8)',   // blue
+        'rgba(255, 99, 132, 0.8)',   // red
+        'rgba(75, 192, 192, 0.8)',   // teal
+        'rgba(255, 159, 64, 0.8)',   // orange
+        'rgba(153, 102, 255, 0.8)',  // purple
+        'rgba(255, 205, 86, 0.8)',   // yellow
+        'rgba(39, 174, 96, 0.8)',    // green
+        'rgba(231, 76, 60, 0.8)',    // bright red
+        'rgba(142, 68, 173, 0.8)',   // violet
+        'rgba(41, 128, 185, 0.8)',   // dark blue
     ],
     borderColor: [
-        'rgba(100,100,100,1)',
-        'rgba(100,100,100,1)',
-        'rgba(100,100,100,1)',
-        'rgba(100,100,100,1)',
-        'rgba(100,100,100,1)',
-        'rgba(100,100,100,1)',
-        'rgba(100,100,100,1)',
-        'rgba(100,100,100,1)',
-        'rgba(100,100,100,1)',
-        'rgba(100,100,100,1)',
+        'rgba(54, 162, 235, 1)',     // blue
+        'rgba(255, 99, 132, 1)',     // red
+        'rgba(75, 192, 192, 1)',     // teal
+        'rgba(255, 159, 64, 1)',     // orange
+        'rgba(153, 102, 255, 1)',    // purple
+        'rgba(255, 205, 86, 1)',     // yellow
+        'rgba(39, 174, 96, 1)',      // green
+        'rgba(231, 76, 60, 1)',      // bright red
+        'rgba(142, 68, 173, 1)',     // violet
+        'rgba(41, 128, 185, 1)',     // dark blue
     ],
-    gridColor: '#f3f3f3',
-    textColor: 'rgba(255, 255, 255, 0.1)',
-    legendTextColor: 'rgba(0, 0, 0, 0.1)',
+    gridColor: 'rgba(255, 255, 255, 0.1)',
+    textColor: 'rgba(255, 255, 255, 0.87)',
+    legendTextColor: 'rgba(255, 255, 255, 0.87)',
+    // Generate colors dynamically to avoid repetition
+    getBackgroundColor: (index: number) => {
+        const baseColors = DEFAULT_DARK_THEME.backgroundColor;
+        if (index < baseColors.length) {
+            return baseColors[index];
+        }
+
+        // Use golden ratio to generate well-distributed hues
+        const hue = (index * 137.508) % 360;
+        // Convert HSL to RGB values
+        const h = hue / 360;
+        const s = 0.7;
+        const l = 0.6;
+
+        // HSL to RGB conversion algorithm
+        const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        const p = 2 * l - q;
+
+        const r = Math.round(hslToRgb(p, q, h + 1 / 3) * 255);
+        const g = Math.round(hslToRgb(p, q, h) * 255);
+        const b = Math.round(hslToRgb(p, q, h - 1 / 3) * 255);
+
+        return `rgba(${r}, ${g}, ${b}, 0.8)`;
+    },
+    getBorderColor: (index: number) => {
+        // First check if we have this index in the base colors
+        const baseColors = DEFAULT_DARK_THEME.backgroundColor;
+        if (index < baseColors.length) {
+            // Extract RGB from background color and return with 1.0 opacity
+            const bgColor = baseColors[index];
+            return bgColor.replace(/rgba\((\d+),\s*(\d+),\s*(\d+).*/, 'rgba($1, $2, $3, 1)');
+        }
+
+        // Use the same color generation logic as backgroundColor but with opacity 1
+        const hue = (index * 137.508) % 360;
+        const h = hue / 360;
+        const s = 0.7;
+        const l = 0.6; // Same lightness as background for color consistency
+
+        const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        const p = 2 * l - q;
+
+        const r = Math.round(hslToRgb(p, q, h + 1 / 3) * 255);
+        const g = Math.round(hslToRgb(p, q, h) * 255);
+        const b = Math.round(hslToRgb(p, q, h - 1 / 3) * 255);
+
+        return `rgba(${r}, ${g}, ${b}, 1)`;
+    }
 };
+
+/**
+ * Helper function to convert HSL to RGB component
+ * Used by the color generation functions
+ */
+function hslToRgb(p: number, q: number, t: number): number {
+    if (t < 0) t += 1;
+    if (t > 1) t -= 1;
+    if (t < 1 / 6) return p + (q - p) * 6 * t;
+    if (t < 1 / 2) return q;
+    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+    return p;
+}
 
 /**
  * Union type of all possible chart component props

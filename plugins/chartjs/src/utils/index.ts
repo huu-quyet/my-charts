@@ -5,7 +5,7 @@
  * @returns boolean indicating if dark mode is active
  */
 export function isDarkMode(): boolean {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return false
 }
 
 /**

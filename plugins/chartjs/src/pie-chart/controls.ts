@@ -36,7 +36,7 @@ export function preparePieChartData(data: CommonDataset, isDarkMode: boolean) {
     const labels = data.items.map(item => item.label);
     const values = data.items.map(item => item.value);
     const backgroundColor = data.items.map((item, index) =>
-        item.color || theme.backgroundColor[index % theme.backgroundColor.length]);
+        item.color || theme.getBackgroundColor(index));
 
     // No borders - use same colors for borders and background
     const borderColor = backgroundColor;
@@ -68,7 +68,7 @@ export function preparePieChartOptions(config: PieChartConfig, isDarkMode: boole
         maintainAspectRatio: false,
         plugins: {
             legend: {
-                display: config.showLegend !== false,
+                display: false,
                 position: 'top' as const,
                 labels: {
                     color: theme.legendTextColor,
@@ -87,7 +87,7 @@ export function preparePieChartOptions(config: PieChartConfig, isDarkMode: boole
                 },
             },
             title: {
-                display: !!config.title,
+                display: false,
                 text: config.title || '',
                 color: theme.textColor,
                 font: {

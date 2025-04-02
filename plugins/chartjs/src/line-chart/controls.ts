@@ -43,7 +43,7 @@ export function prepareLineChartData(data: CommonDataset, config: LineChartConfi
 
     // Create Chart.js datasets
     const chartJSDatasets = Array.from(dataByCategory.entries()).map(([category, points], index) => {
-        const backgroundColor = theme.backgroundColor[index % theme.backgroundColor.length];
+        const backgroundColor = theme.getBackgroundColor(index);
         // Convert rgba(r,g,b,0.8) to rgba(r,g,b,1)
         const borderColor = backgroundColor.replace(/rgba\((\d+,\s*\d+,\s*\d+),\s*0\.8\)/, 'rgba($1, 1)');
 

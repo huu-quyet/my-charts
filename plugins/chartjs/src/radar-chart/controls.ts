@@ -39,7 +39,7 @@ export function prepareRadarChartData(data: CommonDataset, isDarkMode: boolean) 
     const sortedLabels = Array.from(labels);
     const chartJSDatasets = Array.from(categories).map((category, index) => {
         const values = valueLookup.get(category) || new Map();
-        const backgroundColor = theme.backgroundColor[index % theme.backgroundColor.length];
+        const backgroundColor = theme.getBackgroundColor(index);
         const borderColor = backgroundColor; // Same as background color
 
         return {

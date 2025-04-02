@@ -36,7 +36,7 @@ export function prepareBarChartData(data: CommonDataset, config: BarChartConfig,
 
     // Create Chart.js datasets
     const chartJSDatasets = Array.from(dataByCategory.entries()).map(([category, values], index) => {
-        const backgroundColor = theme.backgroundColor[index % theme.backgroundColor.length];
+        const backgroundColor = theme.getBackgroundColor(index);
 
         return {
             label: category,
@@ -44,7 +44,7 @@ export function prepareBarChartData(data: CommonDataset, config: BarChartConfig,
             backgroundColor,
             borderColor: backgroundColor, // Same as background color
             borderWidth: 0, // No borders
-            borderRadius: 16,
+            borderRadius: 4,
             barPercentage: 0.8,
             categoryPercentage: 0.8,
             borderSkipped: false,
@@ -52,12 +52,6 @@ export function prepareBarChartData(data: CommonDataset, config: BarChartConfig,
             maxBarThickness: 42,     // Maximum width if specified
         };
     });
-
-    console.log('Bar chart data:', {
-        labels: sortedLabels,
-        datasets: chartJSDatasets
-    });
-
 
     return {
         labels: sortedLabels,

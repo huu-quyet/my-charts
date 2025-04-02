@@ -16,15 +16,19 @@ function App() {
   // Create a common dataset for all charts
   const commonDataset: CommonDataset = {
     items: [
-      { label: "Red", value: 12, category: "Group 1" },
-      { label: "Blue", value: 19, category: "Group 1" },
-      { label: "Yellow", value: 3, category: "Group 1" },
-      { label: "Green", value: 5, category: "Group 2" },
-      { label: "Purple", value: 2, category: "Group 2" },
-      { label: "Orange", value: 3, category: "Group 2" },
-      { label: "Red", value: 8, category: "Group 3" },
-      { label: "Blue", value: 12, category: "Group 3" },
-      { label: "Yellow", value: 8, category: "Group 3" },
+      { label: "1", value: 12, category: "Group 1" },
+      { label: "2", value: 19, category: "Group 1" },
+      { label: "3", value: 3, category: "Group 1" },
+      { label: "4", value: 5, category: "Group 1" },
+      { label: "5", value: 2, category: "Group 1" },
+      { label: "6", value: 3, category: "Group 1" },
+      { label: "7", value: 8, category: "Group 1" },
+      { label: "8", value: 12, category: "Group 1" },
+      { label: "9", value: 8, category: "Group 1" },
+      { label: "10", value: 3, category: "Group 1" },
+      { label: "11", value: 8, category: "Group 1" },
+      { label: "12", value: 12, category: "Group 1" },
+      { label: "13", value: 8, category: "Group 1" },
     ]
   }
 

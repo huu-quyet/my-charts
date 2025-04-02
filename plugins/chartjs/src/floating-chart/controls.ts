@@ -11,7 +11,7 @@ export function prepareFloatingChartData(data: CommonDataset, config: FloatingCh
     const labels = Array.from(new Set(data.items.map(item => item.label)));
 
     const datasets = categories.map((category, index) => {
-        const backgroundColor = theme.backgroundColor[index % theme.backgroundColor.length];
+        const backgroundColor = theme.getBackgroundColor(index);
         const categoryData = labels.map(label => {
             const item = data.items.find(i => i.label === label && (i.category || 'Default') === category);
             if (!item) return null;
